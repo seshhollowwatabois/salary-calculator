@@ -6,35 +6,29 @@
   <meta name="theme-color" content="#111827">
   <link rel="manifest" href="manifest.webmanifest">
   <title>Salary Calculator</title>
-
   <style>
     * {
       box-sizing: border-box;
     }
-
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: #0b0f19;
       color: #fff;
     }
-
     .container {
       max-width: 600px;
       margin: auto;
       padding: 20px 16px 40px;
     }
-
     h1 {
       margin: 8px 0 4px;
       font-size: 30px;
     }
-
     .subtitle {
       color: #9ca3af;
       margin-bottom: 24px;
     }
-
     .card {
       background: #151b29;
       border: 1px solid #252d3d;
@@ -42,14 +36,12 @@
       padding: 18px;
       margin-bottom: 16px;
     }
-
     label {
       display: block;
       font-size: 14px;
       color: #aeb6c5;
       margin-bottom: 8px;
     }
-
     select,
     input {
       width: 100%;
@@ -61,13 +53,11 @@
       font-size: 16px;
       outline: none;
     }
-
     .months {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
     }
-
     button {
       border: 0;
       border-radius: 12px;
@@ -77,39 +67,32 @@
       font-size: 14px;
       cursor: pointer;
     }
-
     button.active {
       background: #4f46e5;
     }
-
     .quick {
       display: flex;
       gap: 8px;
       margin-bottom: 12px;
     }
-
     .quick button {
       flex: 1;
     }
-
     .hours-grid {
       display: grid;
       gap: 12px;
     }
-
     .summary {
       background: linear-gradient(135deg, #312e81, #4f46e5);
       border-radius: 18px;
       padding: 20px;
       margin-bottom: 16px;
     }
-
     .summary-row {
       display: flex;
       justify-content: space-between;
       margin: 9px 0;
     }
-
     .total {
       font-size: 25px;
       font-weight: 700;
@@ -117,7 +100,6 @@
       padding-top: 14px;
       border-top: 1px solid rgba(255,255,255,.25);
     }
-
     .month-result {
       background: #151b29;
       border: 1px solid #252d3d;
@@ -125,20 +107,17 @@
       padding: 16px;
       margin-bottom: 12px;
     }
-
     .month-title {
       font-size: 19px;
       font-weight: 700;
       margin-bottom: 10px;
     }
-
     .result-row {
       display: flex;
       justify-content: space-between;
       color: #cbd5e1;
       margin: 7px 0;
     }
-
     .result-total {
       color: white;
       font-weight: 700;
@@ -146,14 +125,12 @@
       padding-top: 10px;
       border-top: 1px solid #2b3445;
     }
-
     .note {
       color: #8f9bad;
       font-size: 12px;
       line-height: 1.5;
       margin-top: 12px;
     }
-
     .clear {
       width: 100%;
       background: #252d3d;
@@ -161,304 +138,201 @@
     }
   </style>
 </head>
-
 <body>
-
 <div class="container">
-
   <h1>Salary Calculator</h1>
   <div class="subtitle">Calculate your monthly salary and extra payments.</div>
-
   <div class="card">
-
     <label>Base salary</label>
-
     <select id="salary">
       <option value="1300">1,300 GEL</option>
       <option value="1435">1,435 GEL</option>
+      <option value="1800">1,800 GEL</option>
     </select>
-
   </div>
-
   <div class="card">
-
     <label>Quick selection</label>
-
     <div class="quick">
       <button onclick="selectCurrentMonth()">One month</button>
       <button onclick="selectAllMonths()">All 2026</button>
     </div>
-
     <label>Select month(s)</label>
-
     <div class="months" id="months"></div>
-
   </div>
-
   <div class="card">
-
     <label>Extra hours</label>
-
     <div class="hours-grid">
-
       <div>
         <label>Overtime ×2</label>
         <input id="overtime" type="number" min="0" step="0.5" value="0">
       </div>
-
       <div>
         <label>Night Addition ×1.4</label>
         <input id="night" type="number" min="0" step="0.5" value="0">
       </div>
-
       <div>
         <label>Bank Holiday ×1.25</label>
         <input id="holiday" type="number" min="0" step="0.5" value="0">
       </div>
-
       <div>
         <label>Bank Holiday Night ×1.5</label>
         <input id="holidayNight" type="number" min="0" step="0.5" value="0">
       </div>
-
     </div>
-
     <button class="clear" onclick="clearHours()">Clear hours</button>
-
   </div>
-
   <div class="summary">
-
     <div class="summary-row">
       <span>Base salary</span>
       <strong id="summaryBase">0.00 GEL</strong>
     </div>
-
     <div class="summary-row">
       <span>Extra pay</span>
       <strong id="summaryExtra">0.00 GEL</strong>
     </div>
-
     <div class="summary-row total">
       <span>Gross total</span>
       <strong id="summaryTotal">0.00 GEL</strong>
     </div>
-
     <div class="summary-row">
       <span>Selected months</span>
       <strong id="selectedCount">0</strong>
     </div>
-
   </div>
-
   <div id="results"></div>
-
   <div class="note">
     Premium calculation: base salary ÷ 160 × hours × multiplier.
     Monthly scheduled hours are shown for reference.
   </div>
-
 </div>
-
 <script>
-
 const monthNames = [
   "January", "February", "March", "April",
   "May", "June", "July", "August",
   "September", "October", "November", "December"
 ];
-
 const scheduledHours = [
   168, 160, 184, 176,
   168, 176, 176, 176,
   176, 168, 176, 184
 ];
-
 const monthsContainer = document.getElementById("months");
-
 let selectedMonths = [];
-
 monthNames.forEach((month, index) => {
-
   const button = document.createElement("button");
-
   button.textContent = month.slice(0, 3);
-
   button.onclick = () => toggleMonth(index);
-
   button.id = "month-" + index;
-
   monthsContainer.appendChild(button);
-
 });
-
 function toggleMonth(index) {
-
   if (selectedMonths.includes(index)) {
     selectedMonths = selectedMonths.filter(i => i !== index);
   } else {
     selectedMonths.push(index);
   }
-
   update();
-
 }
-
 function selectAllMonths() {
-
   selectedMonths = [...Array(12).keys()];
-
   update();
-
 }
-
 function selectCurrentMonth() {
-
   const month = new Date().getMonth();
-
   selectedMonths = [month];
-
   update();
-
 }
-
 function clearHours() {
-
   document.getElementById("overtime").value = 0;
   document.getElementById("night").value = 0;
   document.getElementById("holiday").value = 0;
   document.getElementById("holidayNight").value = 0;
-
   update();
-
 }
-
 document
   .querySelectorAll("input, select")
   .forEach(element => element.addEventListener("input", update));
-
 function money(value) {
-
   return value.toFixed(2) + " GEL";
-
 }
-
 function update() {
-
   const salary =
     Number(document.getElementById("salary").value);
-
   const overtime =
     Number(document.getElementById("overtime").value) || 0;
-
   const night =
     Number(document.getElementById("night").value) || 0;
-
   const holiday =
     Number(document.getElementById("holiday").value) || 0;
-
   const holidayNight =
     Number(document.getElementById("holidayNight").value) || 0;
-
   document
     .querySelectorAll(".months button")
     .forEach((button, index) => {
-
       button.classList.toggle(
         "active",
         selectedMonths.includes(index)
       );
-
     });
-
   let totalExtra = 0;
-
   let resultsHTML = "";
-
   selectedMonths
     .sort((a, b) => a - b)
     .forEach(index => {
-
       const overtimePay =
         salary / 160 * overtime * 2;
-
       const nightPay =
         salary / 160 * night * 1.4;
-
       const holidayPay =
         salary / 160 * holiday * 1.25;
-
       const holidayNightPay =
         salary / 160 * holidayNight * 1.5;
-
       const extra =
         overtimePay +
         nightPay +
         holidayPay +
         holidayNightPay;
-
       const total =
         salary + extra;
-
       totalExtra += extra;
-
       resultsHTML += `
-
         <div class="month-result">
-
           <div class="month-title">
             ${monthNames[index]}
           </div>
-
           <div class="result-row">
             <span>Scheduled hours</span>
             <span>${scheduledHours[index]} h</span>
           </div>
-
           <div class="result-row">
             <span>Base salary</span>
             <span>${money(salary)}</span>
           </div>
-
           <div class="result-row">
             <span>Extra pay</span>
             <span>${money(extra)}</span>
           </div>
-
           <div class="result-row result-total">
             <span>Gross total</span>
             <span>${money(total)}</span>
           </div>
-
         </div>
-
       `;
-
     });
-
   const baseTotal =
     salary * selectedMonths.length;
-
   document.getElementById("summaryBase").textContent =
     money(baseTotal);
-
   document.getElementById("summaryExtra").textContent =
     money(totalExtra);
-
   document.getElementById("summaryTotal").textContent =
     money(baseTotal + totalExtra);
-
   document.getElementById("selectedCount").textContent =
     selectedMonths.length;
-
   document.getElementById("results").innerHTML =
     resultsHTML;
-
 }
-
 update();
-
 </script>
-
 </body>
 </html>
