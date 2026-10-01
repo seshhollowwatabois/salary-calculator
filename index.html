@@ -109,8 +109,8 @@
 
     .language-button.animate {
       animation: languageSwitch
-        0.55s
-        cubic-bezier(.34, 1.56, .64, 1);
+        0.35s
+        cubic-bezier(.22, 1, .36, 1);
     }
 
     @keyframes languageSwitch {
@@ -118,16 +118,12 @@
         transform: scale(1) rotate(0deg);
       }
 
-      25% {
-        transform: scale(0.78) rotate(-12deg);
+      35% {
+        transform: scale(0.94) rotate(-6deg);
       }
 
-      55% {
-        transform: scale(1.18) rotate(12deg);
-      }
-
-      80% {
-        transform: scale(0.96) rotate(-4deg);
+      70% {
+        transform: scale(1.06) rotate(4deg);
       }
 
       100% {
@@ -228,17 +224,17 @@
     .month.month-select-animate {
       animation:
         monthSelect
-        0.35s
-        cubic-bezier(.34, 1.56, .64, 1);
+        0.25s
+        ease-out;
     }
 
     @keyframes monthSelect {
       0% {
-        transform: scale(0.88);
+        transform: scale(0.96);
       }
 
-      55% {
-        transform: scale(1.07);
+      50% {
+        transform: scale(1.04);
       }
 
       100% {
@@ -999,498 +995,187 @@
                 monthsContainer.children[selectedMonth];
 
               if (selectedButton) {
-
-                selectedButton.classList.add(
-                  "month-select-animate"
-                );
-
-                selectedButton.addEventListener(
-                  "animationend",
-                  () => {
-                    selectedButton.classList.remove(
-                      "month-select-animate"
-                    );
-                  },
-                  { once: true }
-                );
-
+                selectedButton.classList.remove("month-select-animate");
+                void selectedButton.offsetWidth;
+                selectedButton.classList.add("month-select-animate");
               }
-
             }
           );
 
           monthsContainer.appendChild(button);
-
         }
       );
-
     }
 
 
-    /* =========================
-       LANGUAGE
-    ========================= */
-
-    function applyLanguage() {
-
-      const t =
-        translations[currentLanguage];
-
-      document.documentElement.lang =
-        currentLanguage;
-
-
-      document.getElementById("title").textContent =
-        t.title;
-
-      document.getElementById("salaryLabel").textContent =
-        t.salary;
-
-      document.getElementById("monthsLabel").textContent =
-        t.months;
-
-      document.getElementById("overtimeLabel").textContent =
-        t.overtime;
-
-      document.getElementById("nightLabel").textContent =
-        t.night;
-
-      document.getElementById("holidayLabel").textContent =
-        t.holiday;
-
-      document.getElementById("holidayNightLabel").textContent =
-        t.holidayNight;
-
-      document.getElementById("clearButton").textContent =
-        t.clear;
-
-      document.getElementById("scheduledLabel").textContent =
-        t.scheduled;
-
-      document.getElementById("hourlyLabel").textContent =
-        t.hourly;
-
-      document.getElementById("baseLabel").textContent =
-        t.base;
-
-      document.getElementById("grossLabel").textContent =
-        t.gross;
-
-      document.getElementById("breakdownTitle").textContent =
-        t.breakdown;
-
-      document.getElementById("breakdownOvertime").textContent =
-        t.breakdownOvertime;
-
-      document.getElementById("breakdownNight").textContent =
-        t.breakdownNight;
-
-      document.getElementById("breakdownHoliday").textContent =
-        t.breakdownHoliday;
-
-      document.getElementById("breakdownHolidayNight").textContent =
-        t.breakdownHolidayNight;
-
-      document.getElementById("extraLabel").textContent =
-        t.extra;
-
-
-      languageButton.textContent =
-        currentLanguage === "en"
-          ? "🇬🇪"
-          : "🇬🇧";
-
-
-      createMonths();
-
-      update();
-
+    function formatMoney(value) {
+      return `${Number(value).toFixed(2)} GEL`;
     }
 
 
-    /* =========================
-       LANGUAGE BUTTON
-    ========================= */
-
-    languageButton.addEventListener(
-      "click",
-      () => {
-
-        languageButton.classList.remove(
-          "animate"
-        );
-
-        void languageButton.offsetWidth;
-
-        languageButton.classList.add(
-          "animate"
-        );
-
-
-        currentLanguage =
-          currentLanguage === "en"
-            ? "ka"
-            : "en";
-
-
-        localStorage.setItem(
-          "salaryCalculatorLanguage",
-          currentLanguage
-        );
-
-
-        applyLanguage();
-
-      }
-    );
-
-
-    languageButton.addEventListener(
-      "animationend",
-      () => {
-
-        languageButton.classList.remove(
-          "animate"
-        );
-
-      }
-    );
-
-
-    /* =========================
-       NUMBER FORMATTING
-    ========================= */
-
-    function money(value) {
-
-      return (
-        Number(value).toFixed(2) +
-        " GEL"
-      );
-
+    function readInputValue(input) {
+      const raw = Number(input.value);
+      return Number.isFinite(raw) ? raw : 0;
     }
 
 
-    /* =========================
-       UPDATE ZERO STYLE
-    ========================= */
-
-    function updateZeroStyle(input) {
-
-      if (
-        input.value === "" ||
-        input.value === "0.00" ||
-        input.value === "0"
-      ) {
-
-        input.classList.add(
-          "placeholder-zero"
-        );
-
-      } else {
-
-        input.classList.remove(
-          "placeholder-zero"
-        );
-
-      }
-
+    function getMonthlySalary() {
+      return Number(salaryInput.value);
     }
 
 
-    /* =========================
-       CALCULATE
-    ========================= */
+    function getBaseHours() {
+      return selectedMonth === null ? 0 : monthHours[selectedMonth];
+    }
+
+
+    function getHourlySalary() {
+      const monthlySalary = getMonthlySalary();
+      const baseHours = getBaseHours();
+      return baseHours > 0 ? monthlySalary / baseHours : 0;
+    }
+
 
     function update() {
+      const monthlySalary = getMonthlySalary();
+      const baseHours = getBaseHours();
+      const hourlySalary = getHourlySalary();
 
-      const salary =
-        Number(salaryInput.value) || 0;
+      const overtimeHours = readInputValue(overtimeInput);
+      const nightHours = readInputValue(nightInput);
+      const holidayHours = readInputValue(holidayInput);
+      const holidayNightHours = readInputValue(holidayNightInput);
 
+      const scheduledHours = baseHours;
+      const baseSalary = scheduledHours > 0 ? monthlySalary : 0;
 
-      const overtime =
-        Number(overtimeInput.value) || 0;
+      const overtimePay = overtimeHours * hourlySalary * 2;
+      const nightPay = nightHours * hourlySalary * 1.4;
+      const holidayPay = holidayHours * hourlySalary * 1.25;
+      const holidayNightPay = holidayNightHours * hourlySalary * 1.5;
+      const extraPay = overtimePay + nightPay + holidayPay + holidayNightPay;
+      const grossTotal = baseSalary + extraPay;
 
-      const night =
-        Number(nightInput.value) || 0;
+      document.getElementById("scheduledHours").textContent =
+        baseHours ? `${baseHours.toFixed(0)}h` : "—";
 
-      const holiday =
-        Number(holidayInput.value) || 0;
+      document.getElementById("hourlySalary").textContent =
+        hourlySalary ? `${hourlySalary.toFixed(2)} GEL` : "—";
 
-      const holidayNight =
-        Number(holidayNightInput.value) || 0;
+      document.getElementById("baseSalary").textContent =
+        baseSalary ? formatMoney(baseSalary) : "—";
 
+      document.getElementById("grossTotal").textContent =
+        grossTotal ? formatMoney(grossTotal) : "—";
 
-      /* No month selected */
-
-      if (selectedMonth === null) {
-
-        document.getElementById(
-          "scheduledHours"
-        ).textContent = "—";
-
-        document.getElementById(
-          "hourlySalary"
-        ).textContent = "—";
-
-        document.getElementById(
-          "baseSalary"
-        ).textContent = "—";
-
-        document.getElementById(
-          "grossTotal"
-        ).textContent = "—";
-
-        document.getElementById(
-          "overtimePay"
-        ).textContent = "0.00 GEL";
-
-        document.getElementById(
-          "nightPay"
-        ).textContent = "0.00 GEL";
-
-        document.getElementById(
-          "holidayPay"
-        ).textContent = "0.00 GEL";
-
-        document.getElementById(
-          "holidayNightPay"
-        ).textContent = "0.00 GEL";
-
-        document.getElementById(
-          "extraPay"
-        ).textContent = "0.00 GEL";
-
-        return;
-
-      }
-
-
-      const scheduled =
-        monthHours[selectedMonth];
-
-
-      const hourlySalary =
-        salary / scheduled;
-
-
-      const overtimePay =
-        hourlySalary *
-        overtime *
-        2;
-
-
-      const nightPay =
-        hourlySalary *
-        night *
-        1.4;
-
-
-      const holidayPay =
-        hourlySalary *
-        holiday *
-        1.25;
-
-
-      const holidayNightPay =
-        hourlySalary *
-        holidayNight *
-        1.5;
-
-
-      const extraPay =
-        overtimePay +
-        nightPay +
-        holidayPay +
-        holidayNightPay;
-
-
-      const grossTotal =
-        salary +
-        extraPay;
-
-
-      document.getElementById(
-        "scheduledHours"
-      ).textContent =
-        scheduled.toFixed(2);
-
-
-      document.getElementById(
-        "hourlySalary"
-      ).textContent =
-        money(hourlySalary);
-
-
-      document.getElementById(
-        "baseSalary"
-      ).textContent =
-        money(salary);
-
-
-      document.getElementById(
-        "grossTotal"
-      ).textContent =
-        money(grossTotal);
-
-
-      document.getElementById(
-        "overtimePay"
-      ).textContent =
-        money(overtimePay);
-
-
-      document.getElementById(
-        "nightPay"
-      ).textContent =
-        money(nightPay);
-
-
-      document.getElementById(
-        "holidayPay"
-      ).textContent =
-        money(holidayPay);
-
-
-      document.getElementById(
-        "holidayNightPay"
-      ).textContent =
-        money(holidayNightPay);
-
-
-      document.getElementById(
-        "extraPay"
-      ).textContent =
-        money(extraPay);
-
+      document.getElementById("overtimePay").textContent = formatMoney(overtimePay);
+      document.getElementById("nightPay").textContent = formatMoney(nightPay);
+      document.getElementById("holidayPay").textContent = formatMoney(holidayPay);
+      document.getElementById("holidayNightPay").textContent = formatMoney(holidayNightPay);
+      document.getElementById("extraPay").textContent = formatMoney(extraPay);
     }
 
 
-    /* =========================
-       HOUR INPUTS
-    ========================= */
-
-    const hourInputs = [
-
-      overtimeInput,
-      nightInput,
-      holidayInput,
-      holidayNightInput
-
-    ];
+    function clearInputs() {
+      overtimeInput.value = "0.00";
+      nightInput.value = "0.00";
+      holidayInput.value = "0.00";
+      holidayNightInput.value = "0.00";
+      update();
+    }
 
 
-    hourInputs.forEach(
-      input => {
+    function applyLanguage() {
+      const lang = currentLanguage;
+      document.documentElement.lang = lang;
 
-        /*
-         * Show empty field while typing.
-         */
+      const labels = {
+        en: {
+          title: "Salary Calculator 🍏",
+          salary: "Monthly Salary",
+          months: "Select Month",
+          clear: "Clear Hours",
+          overtime: "⏱️ Overtime ×2",
+          night: "🌙 Night Addition ×1.4",
+          holiday: "🏖️ Bank Holiday ×1.25",
+          holidayNight: "🌙🏖️ Bank Holiday Night ×1.5",
+          scheduled: "Scheduled Hours",
+          hourly: "Hourly Salary",
+          base: "Base Salary",
+          gross: "Gross Total",
+          breakdown: "📊 Pay Breakdown",
+          extra: "Extra Pay",
+          breakdownOvertime: "⏱️ Overtime",
+          breakdownNight: "🌙 Night Addition",
+          breakdownHoliday: "🏖️ Bank Holiday",
+          breakdownHolidayNight: "🌙🏖️ Bank Holiday Night"
+        },
+        ka: {
+          title: "ხელფასის კალკულატორი 🍏",
+          salary: "თვიური ხელფასი",
+          months: "აირჩიე თვე",
+          clear: "საათების გასუფთავება",
+          overtime: "⏱️ ზეგანაკვეთური ×2",
+          night: "🌙 ღამის დანამატი ×1.4",
+          holiday: "🏖️ სადღესასწაულო დღე ×1.25",
+          holidayNight: "🌙🏖️ სადღესასწაულო ღამის ×1.5",
+          scheduled: "გეგმიური საათები",
+          hourly: "საათობრივი ხელფასი",
+          base: "ძირითადი ხელფასი",
+          gross: "სრული ხელფასი",
+          breakdown: "📊 ანაზღაურების დეტალური გაშლა",
+          extra: "დამატებითი ანაზღაურება",
+          breakdownOvertime: "⏱️ ზეგანაკვეთური",
+          breakdownNight: "🌙 ღამის დანამატი",
+          breakdownHoliday: "🏖️ სადღესასწაულო დღე",
+          breakdownHolidayNight: "🌙🏖️ სადღესასწაულო ღამის"
+        }
+      };
 
-        input.addEventListener(
-          "focus",
-          () => {
+      const text = labels[lang];
+      document.getElementById("title").textContent = text.title;
+      document.getElementById("salaryLabel").textContent = text.salary;
+      document.getElementById("monthsLabel").textContent = text.months;
+      document.getElementById("overtimeLabel").textContent = text.overtime;
+      document.getElementById("nightLabel").textContent = text.night;
+      document.getElementById("holidayLabel").textContent = text.holiday;
+      document.getElementById("holidayNightLabel").textContent = text.holidayNight;
+      document.getElementById("clearButton").textContent = text.clear;
+      document.getElementById("scheduledLabel").textContent = text.scheduled;
+      document.getElementById("hourlyLabel").textContent = text.hourly;
+      document.getElementById("baseLabel").textContent = text.base;
+      document.getElementById("grossLabel").textContent = text.gross;
+      document.getElementById("breakdownTitle").textContent = text.breakdown;
+      document.getElementById("extraLabel").textContent = text.extra;
+      document.getElementById("breakdownOvertime").textContent = text.breakdownOvertime;
+      document.getElementById("breakdownNight").textContent = text.breakdownNight;
+      document.getElementById("breakdownHoliday").textContent = text.breakdownHoliday;
+      document.getElementById("breakdownHolidayNight").textContent = text.breakdownHolidayNight;
 
-            if (
-              input.value === "0.00" ||
-              input.value === "0"
-            ) {
-
-              input.value = "";
-
-            }
-
-            updateZeroStyle(input);
-
-          }
-        );
-
-
-        /*
-         * Restore 0.00 when left empty.
-         */
-
-        input.addEventListener(
-          "blur",
-          () => {
-
-            if (
-              input.value.trim() === ""
-            ) {
-
-              input.value = "0.00";
-
-            }
-
-            updateZeroStyle(input);
-
-            update();
-
-          }
-        );
-
-
-        /*
-         * Recalculate instantly.
-         */
-
-        input.addEventListener(
-          "input",
-          () => {
-
-            updateZeroStyle(input);
-
-            update();
-
-          }
-        );
-
-
-        updateZeroStyle(input);
-
-      }
-    );
-
-
-    /* =========================
-       SALARY
-    ========================= */
-
-    salaryInput.addEventListener(
-      "change",
-      update
-    );
+      languageButton.textContent = lang === "en" ? "🇬🇪" : "🇺🇸";
+      createMonths();
+      update();
+    }
 
 
-    /* =========================
-       CLEAR HOURS
-    ========================= */
+    salaryInput.addEventListener("change", update);
+    overtimeInput.addEventListener("input", update);
+    nightInput.addEventListener("input", update);
+    holidayInput.addEventListener("input", update);
+    holidayNightInput.addEventListener("input", update);
+    clearButton.addEventListener("click", clearInputs);
+    languageButton.addEventListener("click", () => {
+      currentLanguage = currentLanguage === "en" ? "ka" : "en";
+      localStorage.setItem("salaryCalculatorLanguage", currentLanguage);
+      languageButton.classList.remove("animate");
+      void languageButton.offsetWidth;
+      languageButton.classList.add("animate");
+      applyLanguage();
+    });
 
-    clearButton.addEventListener(
-      "click",
-      () => {
-
-        hourInputs.forEach(
-          input => {
-
-            input.value = "0.00";
-
-            updateZeroStyle(input);
-
-          }
-        );
-
-        update();
-
-      }
-    );
-
-
-    /* =========================
-       START
-    ========================= */
-
+    createMonths();
     applyLanguage();
+    update();
 
   </script>
 
