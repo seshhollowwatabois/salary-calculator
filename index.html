@@ -995,13 +995,12 @@
         } else {
           updatePlaceholderClass(input);
         }
-
-        update();
       });
 
-      /* Input: update placeholder class while typing */
+      /* Input: update placeholder class AND calculate while typing */
       input.addEventListener("input", () => {
         updatePlaceholderClass(input);
+        update();
       });
 
       /* Initialize placeholder class */
