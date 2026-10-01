@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#111827">
+  <meta name="theme-color" content="#009DE0">
   <link rel="manifest" href="manifest.webmanifest">
   <title>Salary Calculator</title>
   <style>
@@ -14,7 +14,7 @@
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: #0b0f19;
-      color: #fff;
+      color: #ffffff;
     }
     .container {
       max-width: 600px;
@@ -53,6 +53,11 @@
       font-size: 16px;
       outline: none;
     }
+    select:focus,
+    input:focus {
+      border-color: #009DE0;
+      box-shadow: 0 0 0 2px rgba(0, 157, 224, 0.15);
+    }
     .months {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -66,16 +71,41 @@
       color: white;
       font-size: 14px;
       cursor: pointer;
+      transition: 0.2s ease;
+    }
+    button:active {
+      transform: scale(0.97);
     }
     button.active {
-      background: #4f46e5;
+      background: #009DE0;
+      color: #ffffff;
+      box-shadow: 0 0 12px rgba(0, 157, 224, 0.35);
+      font-weight: 600;
+    }
+    /*
+      White W badge for the selected month.
+    */
+    button.active::before {
+      content: "W";
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      margin-right: 6px;
+      border-radius: 50%;
+      background: #ffffff;
+      color: #009DE0;
+      font-weight: 800;
+      font-size: 12px;
+      vertical-align: middle;
     }
     .hours-grid {
       display: grid;
       gap: 12px;
     }
     .summary {
-      background: linear-gradient(135deg, #312e81, #4f46e5);
+      background: linear-gradient(135deg, #009DE0, #0077b6);
       border-radius: 18px;
       padding: 20px;
       margin-bottom: 16px;
@@ -90,7 +120,7 @@
       font-weight: 700;
       margin-top: 14px;
       padding-top: 14px;
-      border-top: 1px solid rgba(255,255,255,.25);
+      border-top: 1px solid rgba(255,255,255,.3);
     }
     .month-result {
       background: #151b29;
@@ -128,12 +158,18 @@
       background: #252d3d;
       margin-top: 10px;
     }
+    .clear:hover {
+      background: #30394c;
+    }
   </style>
 </head>
 <body>
 <div class="container">
   <h1>Salary Calculator</h1>
-  <div class="subtitle">Calculate your monthly salary and extra payments.</div>
+  <div class="subtitle">
+    Calculate your monthly salary and extra payments.
+  </div>
+  <!-- BASE SALARY -->
   <div class="card">
     <label>Base salary</label>
     <select id="salary">
@@ -142,84 +178,152 @@
       <option value="1800">1,800 GEL</option>
     </select>
   </div>
+  <!-- MONTH SELECTION -->
   <div class="card">
-    <label>Select month(s)</label>
+    <label>Select month</label>
     <div class="months" id="months"></div>
   </div>
+  <!-- EXTRA HOURS -->
   <div class="card">
     <label>Extra hours</label>
     <div class="hours-grid">
       <div>
         <label>Overtime ×2</label>
-        <input id="overtime" type="number" min="0" step="0.5" value="0">
+        <input
+          id="overtime"
+          type="number"
+          min="0"
+          step="0.5"
+          value="0"
+        >
       </div>
       <div>
         <label>Night Addition ×1.4</label>
-        <input id="night" type="number" min="0" step="0.5" value="0">
+        <input
+          id="night"
+          type="number"
+          min="0"
+          step="0.5"
+          value="0"
+        >
       </div>
       <div>
         <label>Bank Holiday ×1.25</label>
-        <input id="holiday" type="number" min="0" step="0.5" value="0">
+        <input
+          id="holiday"
+          type="number"
+          min="0"
+          step="0.5"
+          value="0"
+        >
       </div>
       <div>
         <label>Bank Holiday Night ×1.5</label>
-        <input id="holidayNight" type="number" min="0" step="0.5" value="0">
+        <input
+          id="holidayNight"
+          type="number"
+          min="0"
+          step="0.5"
+          value="0"
+        >
       </div>
     </div>
-    <button class="clear" onclick="clearHours()">Clear hours</button>
+    <button
+      class="clear"
+      onclick="clearHours()"
+    >
+      Clear hours
+    </button>
   </div>
+  <!-- SUMMARY -->
   <div class="summary">
     <div class="summary-row">
       <span>Base salary</span>
-      <strong id="summaryBase">0.00 GEL</strong>
+      <strong id="summaryBase">
+        0.00 GEL
+      </strong>
     </div>
     <div class="summary-row">
       <span>Extra pay</span>
-      <strong id="summaryExtra">0.00 GEL</strong>
+      <strong id="summaryExtra">
+        0.00 GEL
+      </strong>
     </div>
     <div class="summary-row total">
       <span>Gross total</span>
-      <strong id="summaryTotal">0.00 GEL</strong>
-    </div>
-    <div class="summary-row">
-      <span>Selected months</span>
-      <strong id="selectedCount">0</strong>
+      <strong id="summaryTotal">
+        0.00 GEL
+      </strong>
     </div>
   </div>
+  <!-- MONTH RESULT -->
   <div id="results"></div>
   <div class="note">
-    Premium calculation: base salary ÷ 160 × hours × multiplier.
+    Premium calculation:
+    base salary ÷ 160 × hours × multiplier.
     Monthly scheduled hours are shown for reference.
   </div>
 </div>
 <script>
 const monthNames = [
-  "January", "February", "March", "April",
-  "May", "June", "July", "August",
-  "September", "October", "November", "December"
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December"
 ];
 const scheduledHours = [
-  168, 160, 184, 176,
-  168, 176, 176, 176,
-  176, 168, 176, 184
+  168,
+  160,
+  184,
+  176,
+  168,
+  176,
+  176,
+  176,
+  176,
+  168,
+  176,
+  184
 ];
-const monthsContainer = document.getElementById("months");
+const monthsContainer =
+  document.getElementById("months");
 let selectedMonths = [];
+/*
+  Create month buttons
+*/
 monthNames.forEach((month, index) => {
-  const button = document.createElement("button");
-  button.textContent = month.slice(0, 3);
-  button.onclick = () => toggleMonth(index);
-  button.id = "month-" + index;
+  const button =
+    document.createElement("button");
+  button.textContent =
+    month.slice(0, 3);
+  button.onclick =
+    () => toggleMonth(index);
+  button.id =
+    "month-" + index;
   monthsContainer.appendChild(button);
 });
+/*
+  Only ONE month can be selected.
+*/
 function toggleMonth(index) {
   if (selectedMonths.includes(index)) {
-    selectedMonths = selectedMonths.filter(i => i !== index);
+    selectedMonths = [];
   } else {
-    selectedMonths.push(index);
+    selectedMonths = [index];
   }
   update();
 }
+/*
+  Clear extra hours
+*/
 function clearHours() {
   document.getElementById("overtime").value = 0;
   document.getElementById("night").value = 0;
@@ -227,23 +331,50 @@ function clearHours() {
   document.getElementById("holidayNight").value = 0;
   update();
 }
+/*
+  Update calculator when inputs change
+*/
 document
   .querySelectorAll("input, select")
-  .forEach(element => element.addEventListener("input", update));
+  .forEach(element => {
+    element.addEventListener(
+      "input",
+      update
+    );
+  });
+/*
+  Format money
+*/
 function money(value) {
   return value.toFixed(2) + " GEL";
 }
+/*
+  Main calculator
+*/
 function update() {
   const salary =
-    Number(document.getElementById("salary").value);
+    Number(
+      document.getElementById("salary").value
+    );
   const overtime =
-    Number(document.getElementById("overtime").value) || 0;
+    Number(
+      document.getElementById("overtime").value
+    ) || 0;
   const night =
-    Number(document.getElementById("night").value) || 0;
+    Number(
+      document.getElementById("night").value
+    ) || 0;
   const holiday =
-    Number(document.getElementById("holiday").value) || 0;
+    Number(
+      document.getElementById("holiday").value
+    ) || 0;
   const holidayNight =
-    Number(document.getElementById("holidayNight").value) || 0;
+    Number(
+      document.getElementById("holidayNight").value
+    ) || 0;
+  /*
+    Update selected month appearance
+  */
   document
     .querySelectorAll(".months button")
     .forEach((button, index) => {
@@ -254,6 +385,9 @@ function update() {
     });
   let totalExtra = 0;
   let resultsHTML = "";
+  /*
+    Calculate selected month
+  */
   selectedMonths
     .sort((a, b) => a - b)
     .forEach(index => {
@@ -279,37 +413,67 @@ function update() {
             ${monthNames[index]}
           </div>
           <div class="result-row">
-            <span>Scheduled hours</span>
-            <span>${scheduledHours[index]} h</span>
+            <span>
+              Scheduled hours
+            </span>
+            <span>
+              ${scheduledHours[index]} h
+            </span>
           </div>
           <div class="result-row">
-            <span>Base salary</span>
-            <span>${money(salary)}</span>
+            <span>
+              Base salary
+            </span>
+            <span>
+              ${money(salary)}
+            </span>
           </div>
           <div class="result-row">
-            <span>Extra pay</span>
-            <span>${money(extra)}</span>
+            <span>
+              Extra pay
+            </span>
+            <span>
+              ${money(extra)}
+            </span>
           </div>
           <div class="result-row result-total">
-            <span>Gross total</span>
-            <span>${money(total)}</span>
+            <span>
+              Gross total
+            </span>
+            <span>
+              ${money(total)}
+            </span>
           </div>
         </div>
       `;
     });
+  /*
+    Summary
+  */
   const baseTotal =
     salary * selectedMonths.length;
-  document.getElementById("summaryBase").textContent =
+  document.getElementById(
+    "summaryBase"
+  ).textContent =
     money(baseTotal);
-  document.getElementById("summaryExtra").textContent =
+  document.getElementById(
+    "summaryExtra"
+  ).textContent =
     money(totalExtra);
-  document.getElementById("summaryTotal").textContent =
-    money(baseTotal + totalExtra);
-  document.getElementById("selectedCount").textContent =
-    selectedMonths.length;
-  document.getElementById("results").innerHTML =
+  document.getElementById(
+    "summaryTotal"
+  ).textContent =
+    money(
+      baseTotal + totalExtra
+    );
+  document.getElementById(
+    "results"
+  ).innerHTML =
     resultsHTML;
 }
+/*
+  Initial calculation
+*/
 update();
 </script>
 </body>
