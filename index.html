@@ -937,6 +937,13 @@
     const languageButton =
       document.getElementById("languageButton");
 
+    const hourInputs = [
+      overtimeInput,
+      nightInput,
+      holidayInput,
+      holidayNightInput
+    ];
+
 
     /* =========================
        STATE
@@ -948,6 +955,58 @@
       localStorage.getItem(
         "salaryCalculatorLanguage"
       ) || "en";
+
+
+    /* =========================
+       HOUR INPUT PLACEHOLDER BEHAVIOR
+    ========================= */
+
+    function updatePlaceholderClass(input) {
+      const value = input.value.trim();
+      const numValue = Number(value);
+      const isZero = numValue === 0 || value === "" || value === "0.00";
+
+      if (isZero) {
+        input.classList.add("placeholder-zero");
+      } else {
+        input.classList.remove("placeholder-zero");
+      }
+    }
+
+    function setupHourInput(input) {
+      /* Focus: clear the field if it's at 0.00 */
+      input.addEventListener("focus", () => {
+        const value = input.value.trim();
+        const numValue = Number(value);
+
+        if (numValue === 0 || value === "" || value === "0.00") {
+          input.value = "";
+          input.classList.remove("placeholder-zero");
+        }
+      });
+
+      /* Blur: if field is empty, restore 0.00 */
+      input.addEventListener("blur", () => {
+        const value = input.value.trim();
+
+        if (value === "") {
+          input.value = "0.00";
+          input.classList.add("placeholder-zero");
+        } else {
+          updatePlaceholderClass(input);
+        }
+
+        update();
+      });
+
+      /* Input: update placeholder class while typing */
+      input.addEventListener("input", () => {
+        updatePlaceholderClass(input);
+      });
+
+      /* Initialize placeholder class */
+      updatePlaceholderClass(input);
+    }
 
 
     /* =========================
@@ -1081,10 +1140,10 @@
 
 
     function clearInputs() {
-      overtimeInput.value = "0.00";
-      nightInput.value = "0.00";
-      holidayInput.value = "0.00";
-      holidayNightInput.value = "0.00";
+      hourInputs.forEach((input) => {
+        input.value = "0.00";
+        updatePlaceholderClass(input);
+      });
       update();
     }
 
@@ -1163,10 +1222,6 @@
 
 
     salaryInput.addEventListener("change", update);
-    overtimeInput.addEventListener("input", update);
-    nightInput.addEventListener("input", update);
-    holidayInput.addEventListener("input", update);
-    holidayNightInput.addEventListener("input", update);
     clearButton.addEventListener("click", clearInputs);
     languageButton.addEventListener("click", () => {
       currentLanguage = currentLanguage === "en" ? "ka" : "en";
@@ -1177,6 +1232,7 @@
       applyLanguage();
     });
 
+    hourInputs.forEach(setupHourInput);
     createMonths();
     applyLanguage();
     update();
