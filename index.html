@@ -347,7 +347,7 @@
   <div class="note">
     Premium calculation:
     base salary ÷ 160 × hours × multiplier.
-    Monthly hourly salary is calculated using the month's scheduled hours.
+    Monthly hourly salary is calculated using the selected month's scheduled hours.
   </div>
 
 </div>
@@ -391,7 +391,7 @@ const monthsContainer =
   document.getElementById("months");
 
 
-let selectedMonths = [];
+let selectedMonth = null;
 
 
 /*
@@ -406,11 +406,19 @@ monthNames.forEach((month, index) => {
   button.textContent =
     month.slice(0, 3);
 
-  button.onclick =
-    () => toggleMonth(index);
-
   button.id =
     "month-" + index;
+
+  /*
+    IMPORTANT:
+    Month change immediately recalculates
+  */
+
+  button.addEventListener("click", function () {
+
+    toggleMonth(index);
+
+  });
 
   monthsContainer.appendChild(button);
 
@@ -418,20 +426,25 @@ monthNames.forEach((month, index) => {
 
 
 /*
-  Only ONE month can be selected
+  Select / deselect month
 */
 
 function toggleMonth(index) {
 
-  if (selectedMonths.includes(index)) {
+  if (selectedMonth === index) {
 
-    selectedMonths = [];
+    selectedMonth = null;
 
   } else {
 
-    selectedMonths = [index];
+    selectedMonth = index;
 
   }
+
+  /*
+    Force a completely new calculation
+    after changing month.
+  */
 
   update();
 
@@ -458,7 +471,7 @@ function clearHours() {
 
 
 /*
-  Update calculator when inputs change
+  Listen for changes to salary and hours
 */
 
 document
@@ -467,6 +480,11 @@ document
 
     element.addEventListener(
       "input",
+      update
+    );
+
+    element.addEventListener(
+      "change",
       update
     );
 
@@ -493,7 +511,7 @@ function update() {
   const salary =
     Number(
       document.getElementById("salary").value
-    );
+    ) || 0;
 
 
   const overtime =
@@ -521,7 +539,7 @@ function update() {
 
 
   /*
-    Update selected month appearance
+    Update month buttons
   */
 
   document
@@ -530,188 +548,215 @@ function update() {
 
       button.classList.toggle(
         "active",
-        selectedMonths.includes(index)
+        selectedMonth === index
       );
 
     });
 
 
-  let totalExtra = 0;
+  /*
+    No month selected
+  */
 
-  let resultsHTML = "";
+  if (selectedMonth === null) {
+
+    document.getElementById(
+      "summaryBase"
+    ).textContent = "0.00 GEL";
+
+    document.getElementById(
+      "summaryExtra"
+    ).textContent = "0.00 GEL";
+
+    document.getElementById(
+      "summaryTotal"
+    ).textContent = "0.00 GEL";
+
+    document.getElementById(
+      "results"
+    ).innerHTML = "";
+
+    return;
+  }
 
 
   /*
-    Calculate selected month
+    Get the CURRENT selected month's hours
   */
 
-  selectedMonths
-    .sort((a, b) => a - b)
-    .forEach(index => {
-
-      /*
-        Hourly salary for this month
-
-        Example:
-        1300 / 168 = 7.738...
-      */
-
-      const hourlySalary =
-        salary / scheduledHours[index];
-
-
-      /*
-        Premium calculations
-      */
-
-      const overtimePay =
-        salary / 160 * overtime * 2;
-
-
-      const nightPay =
-        salary / 160 * night * 1.4;
-
-
-      const holidayPay =
-        salary / 160 * holiday * 1.25;
-
-
-      const holidayNightPay =
-        salary / 160 * holidayNight * 1.5;
-
-
-      const extra =
-        overtimePay +
-        nightPay +
-        holidayPay +
-        holidayNightPay;
-
-
-      const total =
-        salary + extra;
-
-
-      totalExtra += extra;
-
-
-      resultsHTML += `
-
-        <div class="month-result">
-
-          <div class="month-title">
-            ${monthNames[index]}
-          </div>
-
-
-          <div class="result-row">
-
-            <span>
-              📅 Scheduled hours
-            </span>
-
-            <span>
-              ${scheduledHours[index]} h
-            </span>
-
-          </div>
-
-
-          <div class="result-row hourly-row">
-
-            <span>
-              💰 Hourly salary
-            </span>
-
-            <span>
-              ${money(hourlySalary)} / h
-            </span>
-
-          </div>
-
-
-          <div class="result-row">
-
-            <span>
-              Base salary
-            </span>
-
-            <span>
-              ${money(salary)}
-            </span>
-
-          </div>
-
-
-          <div class="result-row">
-
-            <span>
-              Extra pay
-            </span>
-
-            <span>
-              ${money(extra)}
-            </span>
-
-          </div>
-
-
-          <div class="result-row result-total">
-
-            <span>
-              Gross total
-            </span>
-
-            <span>
-              ${money(total)}
-            </span>
-
-          </div>
-
-        </div>
-
-      `;
-
-    });
+  const monthHours =
+    scheduledHours[selectedMonth];
 
 
   /*
-    Summary
+    Hourly salary for CURRENT month
+
+    Example:
+
+    January:
+    1300 / 168 = 7.74 GEL/hour
+
+    February:
+    1300 / 160 = 8.13 GEL/hour
   */
 
-  const baseTotal =
-    salary * selectedMonths.length;
+  const hourlySalary =
+    salary / monthHours;
 
+
+  /*
+    Premium calculations
+
+    These intentionally continue using
+    the 160-hour base from your original
+    salary rules.
+  */
+
+  const overtimePay =
+    salary / 160 * overtime * 2;
+
+
+  const nightPay =
+    salary / 160 * night * 1.4;
+
+
+  const holidayPay =
+    salary / 160 * holiday * 1.25;
+
+
+  const holidayNightPay =
+    salary / 160 * holidayNight * 1.5;
+
+
+  /*
+    Total extra pay
+  */
+
+  const extra =
+    overtimePay +
+    nightPay +
+    holidayPay +
+    holidayNightPay;
+
+
+  /*
+    Gross salary
+  */
+
+  const total =
+    salary + extra;
+
+
+  /*
+    Update summary
+  */
 
   document.getElementById(
     "summaryBase"
   ).textContent =
-    money(baseTotal);
+    money(salary);
 
 
   document.getElementById(
     "summaryExtra"
   ).textContent =
-    money(totalExtra);
+    money(extra);
 
 
   document.getElementById(
     "summaryTotal"
   ).textContent =
-    money(
-      baseTotal + totalExtra
-    );
+    money(total);
 
+
+  /*
+    Update detailed result
+  */
 
   document.getElementById(
     "results"
-  ).innerHTML =
-    resultsHTML;
+  ).innerHTML = `
+
+    <div class="month-result">
+
+      <div class="month-title">
+        ${monthNames[selectedMonth]}
+      </div>
+
+
+      <div class="result-row">
+
+        <span>
+          📅 Scheduled hours
+        </span>
+
+        <span>
+          ${monthHours} h
+        </span>
+
+      </div>
+
+
+      <div class="result-row hourly-row">
+
+        <span>
+          💰 Hourly salary
+        </span>
+
+        <span>
+          ${money(hourlySalary)} / h
+        </span>
+
+      </div>
+
+
+      <div class="result-row">
+
+        <span>
+          Base salary
+        </span>
+
+        <span>
+          ${money(salary)}
+        </span>
+
+      </div>
+
+
+      <div class="result-row">
+
+        <span>
+          Extra pay
+        </span>
+
+        <span>
+          ${money(extra)}
+        </span>
+
+      </div>
+
+
+      <div class="result-row result-total">
+
+        <span>
+          Gross total
+        </span>
+
+        <span>
+          ${money(total)}
+        </span>
+
+      </div>
+
+    </div>
+
+  `;
 
 }
 
 
 /*
-  Initial calculation
+  Initial state
 */
 
 update();
