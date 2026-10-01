@@ -70,14 +70,6 @@
     button.active {
       background: #4f46e5;
     }
-    .quick {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-    .quick button {
-      flex: 1;
-    }
     .hours-grid {
       display: grid;
       gap: 12px;
@@ -151,11 +143,6 @@
     </select>
   </div>
   <div class="card">
-    <label>Quick selection</label>
-    <div class="quick">
-      <button onclick="selectCurrentMonth()">One month</button>
-      <button onclick="selectAllMonths()">All 2026</button>
-    </div>
     <label>Select month(s)</label>
     <div class="months" id="months"></div>
   </div>
@@ -231,15 +218,6 @@ function toggleMonth(index) {
   } else {
     selectedMonths.push(index);
   }
-  update();
-}
-function selectAllMonths() {
-  selectedMonths = [...Array(12).keys()];
-  update();
-}
-function selectCurrentMonth() {
-  const month = new Date().getMonth();
-  selectedMonths = [month];
   update();
 }
 function clearHours() {
