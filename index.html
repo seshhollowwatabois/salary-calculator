@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#111827">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="manifest" href="./manifest.webmanifest">
 
   <title>Salary Calculator 🍏</title>
 
@@ -18,28 +18,27 @@
 
     body {
       margin: 0;
-      padding: 20px 14px 40px;
+      padding: 18px 14px 30px;
       background: #0b0f19;
       color: #ffffff;
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
         "SF Pro Text", Arial, sans-serif;
     }
 
-    .container {
+    .app {
       width: 100%;
-      max-width: 600px;
+      max-width: 520px;
       margin: 0 auto;
     }
 
-    /* HEADER */
-
-    .header {
-      position: relative;
-      text-align: center;
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       margin-bottom: 18px;
     }
 
-    .title {
+    h1 {
       margin: 0;
       font-size: 25px;
       font-weight: 800;
@@ -47,37 +46,21 @@
     }
 
     .language-btn {
-      position: absolute;
-      right: 0;
-      top: 0;
-
-      width: 44px;
-      height: 44px;
-
-      border: none;
-      border-radius: 14px;
-
+      border: 0;
       background: #151b29;
-      color: white;
-
-      font-size: 22px;
+      width: 48px;
+      height: 42px;
+      border-radius: 13px;
+      font-size: 23px;
       cursor: pointer;
-
       display: flex;
       align-items: center;
       justify-content: center;
-
-      transition:
-        background 0.2s ease,
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
     }
 
     .language-btn:active {
       transform: scale(0.94);
     }
-
-    /* LANGUAGE PRESS ANIMATION */
 
     .language-btn.language-animate {
       animation: languageShake 0.35s ease;
@@ -109,54 +92,40 @@
       }
     }
 
-    /* CARDS */
-
     .card {
       background: #151b29;
       border-radius: 20px;
-      padding: 18px;
+      padding: 17px;
       margin-bottom: 14px;
     }
 
     .section-title {
-      font-size: 14px;
-      color: #aeb7c7;
-      font-weight: 700;
-      margin-bottom: 10px;
+      font-size: 15px;
+      font-weight: 800;
+      margin-bottom: 11px;
+      color: #ffffff;
     }
 
-    /* SELECT */
-
-    .salary-select {
+    select,
+    input {
       width: 100%;
-      height: 50px;
+      border: 1px solid #293247;
+      background: #0f1522;
+      color: #ffffff;
+      border-radius: 13px;
+      min-height: 48px;
       padding: 0 14px;
-
-      border: 1px solid #273044;
-      border-radius: 14px;
-
-      background: #0f1420;
-      color: white;
-
       font-size: 16px;
-      font-weight: 700;
-
       outline: none;
       appearance: none;
-
-      transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
     }
 
-    .salary-select:focus {
+    select:focus {
       border-color: #009DE0;
       box-shadow: 0 0 0 3px rgba(0, 157, 224, 0.25);
     }
 
-    /* MONTHS */
-
-    .months-grid {
+    .months {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 9px;
@@ -164,64 +133,41 @@
 
     .month {
       position: relative;
-
-      min-height: 54px;
-
-      border: 1px solid #273044;
-      border-radius: 14px;
-
-      background: #0f1420;
+      min-height: 48px;
+      border: 0;
+      border-radius: 13px;
+      background: #0f1522;
       color: #aeb7c7;
-
       font-size: 14px;
       font-weight: 800;
-
       cursor: pointer;
-
-      transition:
-        background 0.2s ease,
-        border-color 0.2s ease,
-        color 0.2s ease,
-        box-shadow 0.2s ease,
-        transform 0.2s ease;
-    }
-
-    .month:active {
-      transform: scale(0.95);
+      overflow: hidden;
     }
 
     .month.selected {
       background: #009DE0;
-      border-color: #009DE0;
-      color: white;
-      box-shadow:
-        0 0 0 3px rgba(0, 157, 224, 0.18),
-        0 0 18px rgba(0, 157, 224, 0.25);
+      color: #ffffff;
     }
 
     .month-w {
       position: absolute;
-
-      top: 5px;
       right: 5px;
-
-      width: 18px;
-      height: 18px;
-
+      top: 5px;
+      width: 17px;
+      height: 17px;
       border-radius: 50%;
-
-      background: white;
+      background: #ffffff;
       color: #009DE0;
-
-      font-size: 10px;
-      font-weight: 900;
-
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 9px;
+      font-weight: 900;
     }
 
-    /* MONTH PRESS ANIMATION */
+    .month:not(.selected) .month-w {
+      display: none;
+    }
 
     .month.month-select-animate {
       animation: monthPress 0.38s ease;
@@ -267,12 +213,10 @@
       }
     }
 
-    /* HOURS */
-
     .hours-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 13px 10px;
+      gap: 12px;
     }
 
     .hour-group {
@@ -283,7 +227,6 @@
       display: block;
       min-height: auto;
       margin-bottom: 1px;
-
       color: #aeb7c7;
       font-size: 12px;
       line-height: 1.25;
@@ -291,26 +234,9 @@
     }
 
     .hour-input {
-      width: 100%;
-      height: 50px;
-
-      padding: 0 13px;
-
-      border: 1px solid #273044;
-      border-radius: 14px;
-
-      background: #0f1420;
-      color: white;
-
-      font-size: 16px;
-      font-weight: 700;
-
-      outline: none;
-
-      transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease,
-        opacity 0.2s ease;
+      text-align: center;
+      font-size: 17px;
+      font-weight: 800;
     }
 
     .hour-input:focus {
@@ -323,40 +249,30 @@
       box-shadow: 0 0 0 3px rgba(255, 59, 48, 0.28);
     }
 
-    .hour-input.placeholder-zero {
-      color: #5f697a;
+    .placeholder-zero {
+      color: #687386 !important;
     }
 
-    /* CLEAR */
+    #unpaidLeave {
+      border-color: #ff3b30;
+    }
 
     .clear-btn {
       width: 100%;
-      height: 48px;
-
-      margin-top: 14px;
-
-      border: none;
-      border-radius: 14px;
-
-      background: #252d3d;
+      margin-top: 13px;
+      min-height: 45px;
+      border: 0;
+      border-radius: 13px;
+      background: #252d3e;
       color: #ffffff;
-
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 800;
-
       cursor: pointer;
-
-      transition:
-        transform 0.2s ease,
-        background 0.2s ease;
     }
 
     .clear-btn:active {
-      transform: scale(0.97);
-      background: #30394c;
+      transform: scale(0.98);
     }
-
-    /* SUMMARY */
 
     .summary-grid {
       display: grid;
@@ -365,182 +281,128 @@
     }
 
     .summary-item {
-      background: #0f1420;
+      background: #0f1522;
       border-radius: 14px;
       padding: 13px;
     }
 
     .summary-label {
-      color: #8f9aad;
+      color: #7f8ba1;
       font-size: 11px;
       font-weight: 700;
       margin-bottom: 5px;
     }
 
     .summary-value {
+      color: #ffffff;
       font-size: 17px;
       font-weight: 800;
     }
 
     .gross-card {
-      margin-top: 10px;
-      background: #009DE0;
-      border-radius: 16px;
-      padding: 17px;
+      background: linear-gradient(145deg, #151b29, #101725);
     }
 
-    .gross-card .summary-label {
-      color: rgba(255, 255, 255, 0.78);
+    .gross {
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing: -1px;
     }
-
-    .gross-card .summary-value {
-      font-size: 28px;
-    }
-
-    /* BREAKDOWN */
 
     .breakdown-row {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      gap: 15px;
-
-      padding: 11px 0;
-
-      border-bottom: 1px solid #252d3d;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid #252d3e;
+      font-size: 13px;
     }
 
     .breakdown-row:last-child {
-      border-bottom: none;
+      border-bottom: 0;
+      padding-bottom: 0;
     }
 
-    .breakdown-name {
+    .breakdown-label {
       color: #aeb7c7;
-      font-size: 13px;
-      font-weight: 700;
     }
 
     .breakdown-value {
-      font-size: 14px;
+      color: #ffffff;
       font-weight: 800;
       white-space: nowrap;
     }
 
     .extra-positive {
-      color: #34c759;
+      color: #34c759 !important;
     }
 
     .deduction-negative {
-      color: #ff3b30;
+      color: #ff3b30 !important;
     }
 
-    .extra-row {
-      margin-top: 7px;
-      padding-top: 14px;
-
-      border-top: 1px solid #273044;
-    }
-
-    /* FOOTER */
-
-    .footer {
-      text-align: center;
-      color: #586274;
-      font-size: 11px;
-      margin-top: 20px;
-    }
-
-    /* MOBILE */
-
-    @media (max-width: 400px) {
+    @media (max-width: 360px) {
       body {
-        padding-left: 11px;
-        padding-right: 11px;
+        padding-left: 10px;
+        padding-right: 10px;
       }
 
       .card {
-        padding: 15px;
-      }
-
-      .months-grid {
-        gap: 7px;
+        padding: 14px;
       }
 
       .month {
-        min-height: 51px;
         font-size: 13px;
       }
 
-      .hours-grid {
-        gap: 11px 8px;
-      }
-    }
-
-    /* REDUCED MOTION */
-
-    @media (prefers-reduced-motion: reduce) {
-      .language-btn,
-      .month,
-      .hour-input,
-      .clear-btn {
-        transition: none;
-      }
-
-      .language-btn.language-animate,
-      .month.month-select-animate,
-      .month.month-select-animate .month-w {
-        animation: none;
+      .hour-label {
+        font-size: 11px;
       }
     }
   </style>
 </head>
 
 <body>
+  <div class="app">
 
-  <div class="container">
-
-    <!-- HEADER -->
-
-    <div class="header">
-      <h1 id="title" class="title">Salary Calculator 🍏</h1>
+    <div class="top">
+      <h1 id="title">Salary Calculator 🍏</h1>
 
       <button
         id="languageBtn"
         class="language-btn"
         type="button"
-        aria-label="Switch language"
+        aria-label="Change language"
       >
         🇬🇪
       </button>
     </div>
 
-    <!-- SALARY -->
-
     <div class="card">
-      <div id="salaryLabel" class="section-title">
+      <div class="section-title" id="salaryLabel">
         Monthly Salary
       </div>
 
-      <select id="salary" class="salary-select">
+      <select id="salary">
         <option value="1335.93">1335.93 GEL</option>
         <option value="1434.72">1434.72 GEL</option>
         <option value="1842.40">1842.40 GEL</option>
       </select>
     </div>
 
-    <!-- MONTHS -->
-
     <div class="card">
-      <div id="monthLabel" class="section-title">
+      <div class="section-title" id="monthLabel">
         Select Month
       </div>
 
-      <div id="months" class="months-grid"></div>
+      <div id="months" class="months"></div>
     </div>
 
-    <!-- HOURS -->
-
     <div class="card">
+      <div class="section-title" id="hoursTitle">
+        Hours
+      </div>
 
       <div class="hours-grid">
 
@@ -559,7 +421,7 @@
             type="number"
             inputmode="decimal"
             min="0"
-            step="0.5"
+            step="0.01"
             value="0.00"
           >
         </div>
@@ -579,7 +441,7 @@
             type="number"
             inputmode="decimal"
             min="0"
-            step="0.5"
+            step="0.01"
             value="0.00"
           >
         </div>
@@ -599,7 +461,7 @@
             type="number"
             inputmode="decimal"
             min="0"
-            step="0.5"
+            step="0.01"
             value="0.00"
           >
         </div>
@@ -619,7 +481,7 @@
             type="number"
             inputmode="decimal"
             min="0"
-            step="0.5"
+            step="0.01"
             value="0.00"
           >
         </div>
@@ -656,267 +518,204 @@
       >
         Clear Hours
       </button>
-
     </div>
 
-    <!-- SUMMARY -->
-
     <div class="card">
+      <div class="section-title" id="summaryTitle">
+        Summary
+      </div>
 
       <div class="summary-grid">
 
         <div class="summary-item">
-          <div id="scheduledLabel" class="summary-label">
+          <div
+            class="summary-label"
+            id="scheduledLabel"
+          >
             Scheduled Hours
           </div>
-          <div id="scheduledHours" class="summary-value">
+
+          <div
+            class="summary-value"
+            id="scheduledHours"
+          >
             0
           </div>
         </div>
 
         <div class="summary-item">
-          <div id="scheduledDaysLabel" class="summary-label">
+          <div
+            class="summary-label"
+            id="scheduledDaysLabel"
+          >
             Scheduled Days
           </div>
-          <div id="scheduledDays" class="summary-value">
+
+          <div
+            class="summary-value"
+            id="scheduledDays"
+          >
             0
           </div>
         </div>
 
         <div class="summary-item">
-          <div id="hourlyLabel" class="summary-label">
+          <div
+            class="summary-label"
+            id="hourlyLabel"
+          >
             Hourly Salary
           </div>
-          <div id="hourlySalary" class="summary-value">
+
+          <div
+            class="summary-value"
+            id="hourlySalary"
+          >
             0.00 GEL
           </div>
         </div>
 
         <div class="summary-item">
-          <div id="baseLabel" class="summary-label">
+          <div
+            class="summary-label"
+            id="baseLabel"
+          >
             Base Salary
           </div>
-          <div id="baseSalary" class="summary-value">
+
+          <div
+            class="summary-value"
+            id="baseSalary"
+          >
             0.00 GEL
           </div>
         </div>
 
       </div>
-
-      <div class="gross-card">
-        <div id="grossLabel" class="summary-label">
-          Gross Total
-        </div>
-
-        <div id="grossTotal" class="summary-value">
-          0.00 GEL
-        </div>
-      </div>
-
     </div>
 
-    <!-- BREAKDOWN -->
+    <div class="card gross-card">
+      <div class="summary-label" id="grossLabel">
+        Gross Total
+      </div>
+
+      <div
+        class="gross"
+        id="grossTotal"
+      >
+        0.00 GEL
+      </div>
+    </div>
 
     <div class="card">
-
-      <div id="breakdownTitle" class="section-title">
+      <div class="section-title" id="breakdownTitle">
         📊 Pay Breakdown
       </div>
 
       <div class="breakdown-row">
-        <div id="breakdownOvertime" class="breakdown-name">
+        <span
+          class="breakdown-label"
+          id="breakdownOvertime"
+        >
           ⏱️ Overtime
-        </div>
+        </span>
 
-        <div
+        <span
+          class="breakdown-value"
           id="overtimePay"
-          class="breakdown-value"
         >
           0.00 GEL
-        </div>
+        </span>
       </div>
 
       <div class="breakdown-row">
-        <div id="breakdownNight" class="breakdown-name">
+        <span
+          class="breakdown-label"
+          id="breakdownNight"
+        >
           🌙 Night Addition
-        </div>
+        </span>
 
-        <div
+        <span
+          class="breakdown-value"
           id="nightPay"
-          class="breakdown-value"
         >
           0.00 GEL
-        </div>
+        </span>
       </div>
 
       <div class="breakdown-row">
-        <div id="breakdownHoliday" class="breakdown-name">
+        <span
+          class="breakdown-label"
+          id="breakdownHoliday"
+        >
           🏖️ Bank Holiday
-        </div>
+        </span>
 
-        <div
+        <span
+          class="breakdown-value"
           id="holidayPay"
-          class="breakdown-value"
         >
           0.00 GEL
-        </div>
+        </span>
       </div>
 
       <div class="breakdown-row">
-        <div id="breakdownHolidayNight" class="breakdown-name">
+        <span
+          class="breakdown-label"
+          id="breakdownHolidayNight"
+        >
           🌙🏖️ Bank Holiday Night
-        </div>
+        </span>
 
-        <div
-          id="holidayNightPay"
+        <span
           class="breakdown-value"
+          id="holidayNightPay"
         >
           0.00 GEL
-        </div>
+        </span>
       </div>
 
       <div class="breakdown-row">
-        <div id="breakdownDeduction" class="breakdown-name">
-          📉 Unpaid Leave Deduction
-        </div>
-
-        <div
-          id="deduction"
-          class="breakdown-value"
+        <span
+          class="breakdown-label"
+          id="extraLabel"
         >
-          0.00 GEL
-        </div>
-      </div>
-
-      <div class="breakdown-row extra-row">
-        <div id="extraLabel" class="breakdown-name">
           Extra Pay
-        </div>
+        </span>
 
-        <div
-          id="extraPay"
+        <span
           class="breakdown-value"
+          id="extraPay"
         >
           0.00 GEL
-        </div>
+        </span>
       </div>
 
-    </div>
+      <div class="breakdown-row">
+        <span
+          class="breakdown-label"
+          id="breakdownDeduction"
+        >
+          📉 Unpaid Leave Deduction
+        </span>
 
-    <div class="footer">
-      Salary Calculator
+        <span
+          class="breakdown-value"
+          id="deduction"
+        >
+          0.00 GEL
+        </span>
+      </div>
     </div>
 
   </div>
 
   <script>
-    /* =========================
-       DATA
-    ========================= */
+    const salaryInput = document.getElementById("salary");
 
-    const monthHours = [
-      144, 160, 168, 152,
-      152, 176, 184, 160,
-      176, 168, 160, 184
-    ];
-
-    const scheduledWorkdays = [
-      18, 20, 21, 19,
-      19, 22, 23, 20,
-      22, 21, 20, 23
-    ];
-
-    const monthNames = {
-      en: [
-        "Jan", "Feb", "Mar", "Apr",
-        "May", "Jun", "Jul", "Aug",
-        "Sep", "Oct", "Nov", "Dec"
-      ],
-
-      ka: [
-        "იან", "თებ", "მარ", "აპრ",
-        "მაი", "ივნ", "ივლ", "აგვ",
-        "სექ", "ოქტ", "ნოე", "დეკ"
-      ]
-    };
-
-    const translations = {
-      en: {
-        title: "Salary Calculator 🍏",
-        salary: "Monthly Salary",
-        months: "Select Month",
-
-        overtime: "⏱️ Overtime ×2",
-        night: "🌙 Night Addition ×1.4",
-        holiday: "🏖️ Bank Holiday ×1.25",
-        holidayNight: "🌙🏖️ Bank Holiday Night ×1.5",
-        unpaidLeave: "📅 Unpaid Leave Days",
-
-        clear: "Clear Hours",
-
-        scheduled: "Scheduled Hours",
-        scheduledDays: "Scheduled Days",
-        hourly: "Hourly Salary",
-        base: "Base Salary",
-        gross: "Gross Total",
-
-        breakdown: "📊 Pay Breakdown",
-
-        breakdownOvertime: "⏱️ Overtime",
-        breakdownNight: "🌙 Night Addition",
-        breakdownHoliday: "🏖️ Bank Holiday",
-        breakdownHolidayNight: "🌙🏖️ Bank Holiday Night",
-        breakdownDeduction: "📉 Unpaid Leave Deduction",
-
-        extra: "Extra Pay"
-      },
-
-      ka: {
-        title: "ხელფასის კალკულატორი 🍏",
-        salary: "თვიური ხელფასი",
-        months: "აირჩიე თვე",
-
-        overtime: "⏱️ ზეგანაკვეთური ×2",
-        night: "🌙 ღამის დანამატი ×1.4",
-        holiday: "🏖️ სადღესასწაულო დღე ×1.25",
-        holidayNight: "🌙🏖️ სადღესასწაულო ღამის ×1.5",
-        unpaidLeave: "📅 უხელფასო შვებულების დღეები",
-
-        clear: "საათების გასუფთავება",
-
-        scheduled: "გეგმიური საათები",
-        scheduledDays: "გეგმიური დღეები",
-        hourly: "საათობრივი ხელფასი",
-        base: "ძირითადი ხელფასი",
-        gross: "სრული ხელფასი",
-
-        breakdown: "📊 ანაზღაურების დეტალური გაშლა",
-
-        breakdownOvertime: "⏱️ ზეგანაკვეთური",
-        breakdownNight: "🌙 ღამის დანამატი",
-        breakdownHoliday: "🏖️ სადღესასწაულო დღე",
-        breakdownHolidayNight: "🌙🏖️ სადღესასწაულო ღამის",
-        breakdownDeduction: "📉 უხელფასო დღეების გამოკლება",
-
-        extra: "დამატებითი ანაზღაურება"
-      }
-    };
-
-    /* =========================
-       STATE
-    ========================= */
-
-    let selectedMonth = new Date().getMonth();
-
-    let currentLanguage =
-      localStorage.getItem("salaryCalculatorLanguage") || "en";
-
-    /* =========================
-       ELEMENTS
-    ========================= */
-
-    const salaryInput =
-      document.getElementById("salary");
+    const monthsContainer =
+      document.getElementById("months");
 
     const overtimeInput =
       document.getElementById("overtime");
@@ -933,14 +732,11 @@
     const unpaidLeaveInput =
       document.getElementById("unpaidLeave");
 
-    const languageBtn =
-      document.getElementById("languageBtn");
-
     const clearBtn =
       document.getElementById("clearBtn");
 
-    const monthsContainer =
-      document.getElementById("months");
+    const languageBtn =
+      document.getElementById("languageBtn");
 
     const scheduledHoursEl =
       document.getElementById("scheduledHours");
@@ -969,42 +765,244 @@
     const holidayNightPayEl =
       document.getElementById("holidayNightPay");
 
-    const deductionEl =
-      document.getElementById("deduction");
-
     const extraPayEl =
       document.getElementById("extraPay");
 
-    const hourInputs = [
-      overtimeInput,
-      nightInput,
-      holidayInput,
-      holidayNightInput,
-      unpaidLeaveInput
+    const deductionEl =
+      document.getElementById("deduction");
+
+
+    const monthHours = [
+      144,
+      160,
+      168,
+      152,
+      152,
+      176,
+      184,
+      160,
+      176,
+      168,
+      160,
+      184
     ];
 
-    /* =========================
-       HELPERS
-    ========================= */
+    const scheduledWorkdays = [
+      18,
+      20,
+      21,
+      19,
+      19,
+      22,
+      23,
+      20,
+      22,
+      21,
+      20,
+      23
+    ];
 
-    function money(value) {
-      return Number(value || 0).toFixed(2) + " GEL";
+
+    const monthNames = {
+      en: [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
+      ],
+
+      ka: [
+        "იან",
+        "თებ",
+        "მარ",
+        "აპრ",
+        "მაი",
+        "ივნ",
+        "ივლ",
+        "აგვ",
+        "სექ",
+        "ოქტ",
+        "ნოე",
+        "დეკ"
+      ]
+    };
+
+
+    const translations = {
+
+      en: {
+        title: "Salary Calculator 🍏",
+        salary: "Monthly Salary",
+        months: "Select Month",
+
+        hours: "Hours",
+
+        overtime: "⏱️ Overtime ×2",
+        night: "🌙 Night Addition ×1.4",
+        holiday: "🏖️ Bank Holiday ×1.25",
+        holidayNight:
+          "🌙🏖️ Bank Holiday Night ×1.5",
+
+        unpaidLeave:
+          "📅 Unpaid Leave Days",
+
+        clear: "Clear Hours",
+
+        summary: "Summary",
+
+        scheduled:
+          "Scheduled Hours",
+
+        scheduledDays:
+          "Scheduled Days",
+
+        hourly:
+          "Hourly Salary",
+
+        base:
+          "Base Salary",
+
+        gross:
+          "Gross Total",
+
+        breakdown:
+          "📊 Pay Breakdown",
+
+        breakdownOvertime:
+          "⏱️ Overtime",
+
+        breakdownNight:
+          "🌙 Night Addition",
+
+        breakdownHoliday:
+          "🏖️ Bank Holiday",
+
+        breakdownHolidayNight:
+          "🌙🏖️ Bank Holiday Night",
+
+        deduction:
+          "📉 Unpaid Leave Deduction",
+
+        extra:
+          "Extra Pay"
+      },
+
+
+      ka: {
+        title:
+          "ხელფასის კალკულატორი 🍏",
+
+        salary:
+          "თვიური ხელფასი",
+
+        months:
+          "აირჩიე თვე",
+
+        hours:
+          "საათები",
+
+        overtime:
+          "⏱️ ზეგანაკვეთური ×2",
+
+        night:
+          "🌙 ღამის დანამატი ×1.4",
+
+        holiday:
+          "🏖️ სადღესასწაულო დღე ×1.25",
+
+        holidayNight:
+          "🌙🏖️ სადღესასწაულო ღამის ×1.5",
+
+        unpaidLeave:
+          "📅 უხელფასო შვებულების დღეები",
+
+        clear:
+          "საათების გასუფთავება",
+
+        summary:
+          "შეჯამება",
+
+        scheduled:
+          "გეგმიური საათები",
+
+        scheduledDays:
+          "გეგმიური დღეები",
+
+        hourly:
+          "საათობრივი ხელფასი",
+
+        base:
+          "ძირითადი ხელფასი",
+
+        gross:
+          "სრული ხელფასი",
+
+        breakdown:
+          "📊 ანაზღაურების დეტალური გაშლა",
+
+        breakdownOvertime:
+          "⏱️ ზეგანაკვეთური",
+
+        breakdownNight:
+          "🌙 ღამის დანამატი",
+
+        breakdownHoliday:
+          "🏖️ სადღესასწაულო დღე",
+
+        breakdownHolidayNight:
+          "🌙🏖️ სადღესასწაულო ღამის",
+
+        deduction:
+          "📉 უხელფასო დღეების გამოკლება",
+
+        extra:
+          "დამატებითი ანაზღაურება"
+      }
+    };
+
+
+    let currentLanguage =
+      localStorage.getItem(
+        "salaryCalculatorLanguage"
+      ) || "en";
+
+
+    let selectedMonth =
+      Number(
+        localStorage.getItem(
+          "salaryCalculatorMonth"
+        )
+      );
+
+    if (
+      !Number.isInteger(selectedMonth) ||
+      selectedMonth < 0 ||
+      selectedMonth > 11
+    ) {
+      selectedMonth = new Date().getMonth();
     }
 
-    function updateZeroAppearance(input) {
-      const value = Number(input.value);
 
-      input.classList.toggle(
-        "placeholder-zero",
-        value === 0 || input.value === ""
+    function money(value) {
+      const number = Number(value) || 0;
+
+      return (
+        number.toFixed(2) +
+        " GEL"
       );
     }
 
-    /* =========================
-       MONTHS
-    ========================= */
 
     function renderMonths() {
+
       monthsContainer.innerHTML = "";
 
       monthNames[currentLanguage].forEach(
@@ -1014,177 +1012,97 @@
             document.createElement("button");
 
           button.type = "button";
+
           button.className = "month";
 
-          if (index === selectedMonth) {
-            button.classList.add("selected");
+          if (
+            index === selectedMonth
+          ) {
+            button.classList.add(
+              "selected"
+            );
           }
 
-          button.textContent = monthName;
+          button.textContent =
+            monthName;
+
 
           const badge =
             document.createElement("span");
 
-          badge.className = "month-w";
+          badge.className =
+            "month-w";
+
           badge.textContent = "W";
 
           button.appendChild(badge);
 
+
           button.addEventListener(
             "click",
-            () => selectMonth(index, button)
+            () =>
+              selectMonth(
+                index,
+                button
+              )
           );
 
-          monthsContainer.appendChild(button);
+
+          monthsContainer.appendChild(
+            button
+          );
         }
       );
     }
 
-    function selectMonth(index, element) {
+
+    function selectMonth(
+      index,
+      element
+    ) {
 
       const allMonths =
-        document.querySelectorAll(".month");
+        document.querySelectorAll(
+          ".month"
+        );
 
-      allMonths.forEach((btn) => {
-        btn.classList.remove("selected");
-        btn.classList.remove("month-select-animate");
+      allMonths.forEach(btn => {
+
+        btn.classList.remove(
+          "selected"
+        );
+
+        btn.classList.remove(
+          "month-select-animate"
+        );
       });
+
 
       selectedMonth = index;
 
-      element.classList.add("selected");
-
-      /*
-        Force browser to restart the animation
-        every time the same month is pressed.
-      */
-      void element.offsetWidth;
-
-      element.classList.add("month-select-animate");
-
-      calculateSalary();
-    }
-
-    /* =========================
-       TRANSLATION
-    ========================= */
-
-    function updateTranslations() {
-
-      const t =
-        translations[currentLanguage];
-
-      document.documentElement.lang =
-        currentLanguage === "ka" ? "ka" : "en";
-
-      document.getElementById("title").textContent =
-        t.title;
-
-      document.getElementById("salaryLabel").textContent =
-        t.salary;
-
-      document.getElementById("monthLabel").textContent =
-        t.months;
-
-      document.getElementById("overtimeLabel").textContent =
-        t.overtime;
-
-      document.getElementById("nightLabel").textContent =
-        t.night;
-
-      document.getElementById("holidayLabel").textContent =
-        t.holiday;
-
-      document.getElementById("holidayNightLabel").textContent =
-        t.holidayNight;
-
-      document.getElementById("unpaidLeaveLabel").textContent =
-        t.unpaidLeave;
-
-      document.getElementById("clearBtn").textContent =
-        t.clear;
-
-      document.getElementById("scheduledLabel").textContent =
-        t.scheduled;
-
-      document.getElementById("scheduledDaysLabel").textContent =
-        t.scheduledDays;
-
-      document.getElementById("hourlyLabel").textContent =
-        t.hourly;
-
-      document.getElementById("baseLabel").textContent =
-        t.base;
-
-      document.getElementById("grossLabel").textContent =
-        t.gross;
-
-      document.getElementById("breakdownTitle").textContent =
-        t.breakdown;
-
-      document.getElementById("breakdownOvertime").textContent =
-        t.breakdownOvertime;
-
-      document.getElementById("breakdownNight").textContent =
-        t.breakdownNight;
-
-      document.getElementById("breakdownHoliday").textContent =
-        t.breakdownHoliday;
-
-      document.getElementById("breakdownHolidayNight").textContent =
-        t.breakdownHolidayNight;
-
-      document.getElementById("breakdownDeduction").textContent =
-        t.breakdownDeduction;
-
-      document.getElementById("extraLabel").textContent =
-        t.extra;
-
-      /*
-        English → show Georgian flag
-        Georgian → show British flag
-      */
-      languageBtn.textContent =
-        currentLanguage === "en"
-          ? "🇬🇪"
-          : "🇬🇧";
-
-      renderMonths();
-    }
-
-    function switchLanguage() {
-
-      currentLanguage =
-        currentLanguage === "en"
-          ? "ka"
-          : "en";
 
       localStorage.setItem(
-        "salaryCalculatorLanguage",
-        currentLanguage
+        "salaryCalculatorMonth",
+        selectedMonth
       );
 
-      /*
-        Restart translation button animation
-        even when pressing it repeatedly.
-      */
-      languageBtn.classList.remove(
-        "language-animate"
+
+      element.classList.add(
+        "selected"
       );
 
-      void languageBtn.offsetWidth;
 
-      languageBtn.classList.add(
-        "language-animate"
+      void element.offsetWidth;
+
+
+      element.classList.add(
+        "month-select-animate"
       );
 
-      updateTranslations();
+
       calculateSalary();
     }
 
-    /* =========================
-       EXTRA COLORS
-    ========================= */
 
     function updateExtraColors(
       overtimePay,
@@ -1226,29 +1144,39 @@
       );
     }
 
-    /* =========================
-       CALCULATE
-    ========================= */
 
     function calculateSalary() {
 
       const salary =
-        Number(salaryInput.value) || 0;
+        Number(
+          salaryInput.value
+        ) || 0;
 
       const overtime =
-        Number(overtimeInput.value) || 0;
+        Number(
+          overtimeInput.value
+        ) || 0;
 
       const night =
-        Number(nightInput.value) || 0;
+        Number(
+          nightInput.value
+        ) || 0;
 
       const holiday =
-        Number(holidayInput.value) || 0;
+        Number(
+          holidayInput.value
+        ) || 0;
 
       const holidayNight =
-        Number(holidayNightInput.value) || 0;
+        Number(
+          holidayNightInput.value
+        ) || 0;
 
       const unpaidLeaveDays =
-        Number(unpaidLeaveInput.value) || 0;
+        Number(
+          unpaidLeaveInput.value
+        ) || 0;
+
 
       const scheduledHours =
         monthHours[selectedMonth];
@@ -1256,32 +1184,41 @@
       const scheduledWorkDays =
         scheduledWorkdays[selectedMonth];
 
-      /*
-        Hourly salary
-      */
+
       const hourlySalary =
-        salary / scheduledHours;
+        scheduledHours > 0
+          ? salary / scheduledHours
+          : 0;
 
-      /*
-        Base salary
-      */
+
       const baseSalary =
-        hourlySalary * scheduledHours;
+        hourlySalary *
+        scheduledHours;
 
-      /*
-        Extra payments
-      */
+
       const overtimePay =
-        hourlySalary * overtime * 2;
+        hourlySalary *
+        overtime *
+        2;
+
 
       const nightPay =
-        hourlySalary * night * 1.4;
+        hourlySalary *
+        night *
+        1.4;
+
 
       const holidayPay =
-        hourlySalary * holiday * 1.25;
+        hourlySalary *
+        holiday *
+        1.25;
+
 
       const holidayNightPay =
-        hourlySalary * holidayNight * 1.5;
+        hourlySalary *
+        holidayNight *
+        1.5;
+
 
       const extraPay =
         overtimePay +
@@ -1289,23 +1226,19 @@
         holidayPay +
         holidayNightPay;
 
-      /*
-        Unpaid leave is calculated
-        using scheduled workdays.
-      */
-      const deduction =
-        (salary / scheduledWorkDays) *
-        unpaidLeaveDays;
 
-      /*
-        Gross
-      */
+      const deduction =
+        scheduledWorkDays > 0
+          ? (salary / scheduledWorkDays) *
+            unpaidLeaveDays
+          : 0;
+
+
       const grossTotal =
         baseSalary +
         extraPay -
         deduction;
 
-      /* SUMMARY */
 
       scheduledHoursEl.textContent =
         scheduledHours;
@@ -1322,7 +1255,6 @@
       grossTotalEl.textContent =
         money(grossTotal);
 
-      /* BREAKDOWN */
 
       overtimePayEl.textContent =
         money(overtimePay);
@@ -1336,15 +1268,15 @@
       holidayNightPayEl.textContent =
         money(holidayNightPay);
 
+      extraPayEl.textContent =
+        money(extraPay);
+
+
       deductionEl.textContent =
         deduction > 0
           ? "-" + money(deduction)
           : money(0);
 
-      extraPayEl.textContent =
-        money(extraPay);
-
-      /* COLORS */
 
       updateExtraColors(
         overtimePay,
@@ -1356,67 +1288,291 @@
       );
     }
 
-    /* =========================
-       INPUT BEHAVIOR
-    ========================= */
 
-    hourInputs.forEach((input) => {
+    function updateTranslations() {
 
-      updateZeroAppearance(input);
+      const t =
+        translations[currentLanguage];
 
-      input.addEventListener(
-        "focus",
-        () => {
 
-          if (Number(input.value) === 0) {
-            input.value = "";
-          }
+      document.documentElement.lang =
+        currentLanguage === "ka"
+          ? "ka"
+          : "en";
 
-          input.classList.remove(
-            "placeholder-zero"
-          );
-        }
+
+      document.getElementById(
+        "title"
+      ).textContent = t.title;
+
+
+      document.getElementById(
+        "salaryLabel"
+      ).textContent = t.salary;
+
+
+      document.getElementById(
+        "monthLabel"
+      ).textContent = t.months;
+
+
+      document.getElementById(
+        "hoursTitle"
+      ).textContent = t.hours;
+
+
+      document.getElementById(
+        "overtimeLabel"
+      ).textContent = t.overtime;
+
+
+      document.getElementById(
+        "nightLabel"
+      ).textContent = t.night;
+
+
+      document.getElementById(
+        "holidayLabel"
+      ).textContent = t.holiday;
+
+
+      document.getElementById(
+        "holidayNightLabel"
+      ).textContent =
+        t.holidayNight;
+
+
+      document.getElementById(
+        "unpaidLeaveLabel"
+      ).textContent =
+        t.unpaidLeave;
+
+
+      clearBtn.textContent =
+        t.clear;
+
+
+      document.getElementById(
+        "summaryTitle"
+      ).textContent =
+        t.summary;
+
+
+      document.getElementById(
+        "scheduledLabel"
+      ).textContent =
+        t.scheduled;
+
+
+      document.getElementById(
+        "scheduledDaysLabel"
+      ).textContent =
+        t.scheduledDays;
+
+
+      document.getElementById(
+        "hourlyLabel"
+      ).textContent =
+        t.hourly;
+
+
+      document.getElementById(
+        "baseLabel"
+      ).textContent =
+        t.base;
+
+
+      document.getElementById(
+        "grossLabel"
+      ).textContent =
+        t.gross;
+
+
+      document.getElementById(
+        "breakdownTitle"
+      ).textContent =
+        t.breakdown;
+
+
+      document.getElementById(
+        "breakdownOvertime"
+      ).textContent =
+        t.breakdownOvertime;
+
+
+      document.getElementById(
+        "breakdownNight"
+      ).textContent =
+        t.breakdownNight;
+
+
+      document.getElementById(
+        "breakdownHoliday"
+      ).textContent =
+        t.breakdownHoliday;
+
+
+      document.getElementById(
+        "breakdownHolidayNight"
+      ).textContent =
+        t.breakdownHolidayNight;
+
+
+      document.getElementById(
+        "breakdownDeduction"
+      ).textContent =
+        t.deduction;
+
+
+      document.getElementById(
+        "extraLabel"
+      ).textContent =
+        t.extra;
+
+
+      languageBtn.textContent =
+        currentLanguage === "en"
+          ? "🇬🇪"
+          : "🇬🇧";
+
+
+      renderMonths();
+    }
+
+
+    function switchLanguage() {
+
+      currentLanguage =
+        currentLanguage === "en"
+          ? "ka"
+          : "en";
+
+
+      localStorage.setItem(
+        "salaryCalculatorLanguage",
+        currentLanguage
       );
 
-      input.addEventListener(
-        "blur",
-        () => {
 
-          if (input.value === "") {
-
-            input.value =
-              input.id === "unpaidLeave"
-                ? "0"
-                : "0.00";
-          }
-
-          updateZeroAppearance(input);
-          calculateSalary();
-        }
+      languageBtn.classList.remove(
+        "language-animate"
       );
 
-      input.addEventListener(
-        "input",
-        () => {
+      void languageBtn.offsetWidth;
 
-          updateZeroAppearance(input);
-          calculateSalary();
-        }
+      languageBtn.classList.add(
+        "language-animate"
       );
-    });
 
-    /* =========================
-       SALARY CHANGE
-    ========================= */
+
+      updateTranslations();
+
+      calculateSalary();
+    }
+
+
+    languageBtn.addEventListener(
+      "click",
+      switchLanguage
+    );
+
 
     salaryInput.addEventListener(
       "change",
       calculateSalary
     );
 
-    /* =========================
-       CLEAR
-    ========================= */
+
+    const hourInputs = [
+      overtimeInput,
+      nightInput,
+      holidayInput,
+      holidayNightInput,
+      unpaidLeaveInput
+    ];
+
+
+    hourInputs.forEach(input => {
+
+      input.addEventListener(
+        "focus",
+        () => {
+
+          const value =
+            Number(input.value);
+
+          if (value === 0) {
+            input.value = "";
+            input.classList.remove(
+              "placeholder-zero"
+            );
+          }
+        }
+      );
+
+
+      input.addEventListener(
+        "blur",
+        () => {
+
+          if (
+            input.value === "" ||
+            Number(input.value) < 0
+          ) {
+
+            if (
+              input ===
+              unpaidLeaveInput
+            ) {
+              input.value = "0";
+            } else {
+              input.value = "0.00";
+            }
+          }
+
+          if (
+            Number(input.value) === 0
+          ) {
+            input.classList.add(
+              "placeholder-zero"
+            );
+          } else {
+            input.classList.remove(
+              "placeholder-zero"
+            );
+          }
+
+          calculateSalary();
+        }
+      );
+
+
+      input.addEventListener(
+        "input",
+        () => {
+
+          if (
+            Number(input.value) > 0
+          ) {
+            input.classList.remove(
+              "placeholder-zero"
+            );
+          }
+
+          calculateSalary();
+        }
+      );
+
+
+      if (
+        Number(input.value) === 0
+      ) {
+        input.classList.add(
+          "placeholder-zero"
+        );
+      }
+    });
+
 
     clearBtn.addEventListener(
       "click",
@@ -1428,47 +1584,36 @@
         holidayNightInput.value = "0.00";
         unpaidLeaveInput.value = "0";
 
-        hourInputs.forEach(
-          updateZeroAppearance
-        );
+
+        hourInputs.forEach(input => {
+          input.classList.add(
+            "placeholder-zero"
+          );
+        });
+
 
         calculateSalary();
       }
     );
 
-    /* =========================
-       LANGUAGE BUTTON
-    ========================= */
-
-    languageBtn.addEventListener(
-      "click",
-      switchLanguage
-    );
-
-    /* =========================
-       INITIALIZE
-    ========================= */
 
     updateTranslations();
+
     calculateSalary();
 
-    /* =========================
-       SERVICE WORKER
-    ========================= */
 
-    if ("serviceWorker" in navigator) {
-
+    if (
+      "serviceWorker" in navigator
+    ) {
       window.addEventListener(
         "load",
         () => {
-
           navigator.serviceWorker.register(
             "./sw.js"
-          ).catch(() => {});
+          );
         }
       );
     }
   </script>
-
 </body>
 </html>
