@@ -244,6 +244,12 @@
       box-shadow: 0 0 0 3px rgba(0, 157, 224, 0.25);
     }
 
+    /* Unpaid Leave: normal when idle */
+    #unpaidLeave {
+      border-color: #293247;
+    }
+
+    /* Unpaid Leave: red only while focused */
     #unpaidLeave:focus {
       border-color: #ff3b30;
       box-shadow: 0 0 0 3px rgba(255, 59, 48, 0.28);
@@ -251,10 +257,6 @@
 
     .placeholder-zero {
       color: #687386 !important;
-    }
-
-    #unpaidLeave {
-      border-color: #ff3b30;
     }
 
     .clear-btn {
@@ -379,6 +381,7 @@
       </button>
     </div>
 
+
     <div class="card">
       <div class="section-title" id="salaryLabel">
         Monthly Salary
@@ -391,6 +394,7 @@
       </select>
     </div>
 
+
     <div class="card">
       <div class="section-title" id="monthLabel">
         Select Month
@@ -398,6 +402,7 @@
 
       <div id="months" class="months"></div>
     </div>
+
 
     <div class="card">
       <div class="section-title" id="hoursTitle">
@@ -426,6 +431,7 @@
           >
         </div>
 
+
         <div class="hour-group">
           <label
             id="nightLabel"
@@ -445,6 +451,7 @@
             value="0.00"
           >
         </div>
+
 
         <div class="hour-group">
           <label
@@ -466,6 +473,7 @@
           >
         </div>
 
+
         <div class="hour-group">
           <label
             id="holidayNightLabel"
@@ -485,6 +493,7 @@
             value="0.00"
           >
         </div>
+
 
         <div
           class="hour-group"
@@ -511,6 +520,7 @@
 
       </div>
 
+
       <button
         id="clearBtn"
         class="clear-btn"
@@ -519,6 +529,7 @@
         Clear Hours
       </button>
     </div>
+
 
     <div class="card">
       <div class="section-title" id="summaryTitle">
@@ -543,6 +554,7 @@
           </div>
         </div>
 
+
         <div class="summary-item">
           <div
             class="summary-label"
@@ -559,6 +571,7 @@
           </div>
         </div>
 
+
         <div class="summary-item">
           <div
             class="summary-label"
@@ -574,6 +587,7 @@
             0.00 GEL
           </div>
         </div>
+
 
         <div class="summary-item">
           <div
@@ -594,6 +608,7 @@
       </div>
     </div>
 
+
     <div class="card gross-card">
       <div class="summary-label" id="grossLabel">
         Gross Total
@@ -607,10 +622,12 @@
       </div>
     </div>
 
+
     <div class="card">
       <div class="section-title" id="breakdownTitle">
         📊 Pay Breakdown
       </div>
+
 
       <div class="breakdown-row">
         <span
@@ -628,6 +645,7 @@
         </span>
       </div>
 
+
       <div class="breakdown-row">
         <span
           class="breakdown-label"
@@ -643,6 +661,7 @@
           0.00 GEL
         </span>
       </div>
+
 
       <div class="breakdown-row">
         <span
@@ -660,6 +679,7 @@
         </span>
       </div>
 
+
       <div class="breakdown-row">
         <span
           class="breakdown-label"
@@ -675,6 +695,7 @@
           0.00 GEL
         </span>
       </div>
+
 
       <div class="breakdown-row">
         <span
@@ -692,6 +713,7 @@
         </span>
       </div>
 
+
       <div class="breakdown-row">
         <span
           class="breakdown-label"
@@ -707,12 +729,16 @@
           0.00 GEL
         </span>
       </div>
+
     </div>
 
   </div>
 
+
   <script>
-    const salaryInput = document.getElementById("salary");
+
+    const salaryInput =
+      document.getElementById("salary");
 
     const monthsContainer =
       document.getElementById("months");
@@ -787,6 +813,7 @@
       184
     ];
 
+
     const scheduledWorkdays = [
       18,
       20,
@@ -804,6 +831,7 @@
 
 
     const monthNames = {
+
       en: [
         "Jan",
         "Feb",
@@ -833,30 +861,46 @@
         "ნოე",
         "დეკ"
       ]
+
     };
 
 
     const translations = {
 
       en: {
-        title: "Salary Calculator 🍏",
-        salary: "Monthly Salary",
-        months: "Select Month",
 
-        hours: "Hours",
+        title:
+          "Salary Calculator 🍏",
 
-        overtime: "⏱️ Overtime ×2",
-        night: "🌙 Night Addition ×1.4",
-        holiday: "🏖️ Bank Holiday ×1.25",
+        salary:
+          "Monthly Salary",
+
+        months:
+          "Select Month",
+
+        hours:
+          "Hours",
+
+        overtime:
+          "⏱️ Overtime ×2",
+
+        night:
+          "🌙 Night Addition ×1.4",
+
+        holiday:
+          "🏖️ Bank Holiday ×1.25",
+
         holidayNight:
           "🌙🏖️ Bank Holiday Night ×1.5",
 
         unpaidLeave:
           "📅 Unpaid Leave Days",
 
-        clear: "Clear Hours",
+        clear:
+          "Clear Hours",
 
-        summary: "Summary",
+        summary:
+          "Summary",
 
         scheduled:
           "Scheduled Hours",
@@ -893,10 +937,12 @@
 
         extra:
           "Extra Pay"
+
       },
 
 
       ka: {
+
         title:
           "ხელფასის კალკულატორი 🍏",
 
@@ -965,7 +1011,9 @@
 
         extra:
           "დამატებითი ანაზღაურება"
+
       }
+
     };
 
 
@@ -982,22 +1030,29 @@
         )
       );
 
+
     if (
       !Number.isInteger(selectedMonth) ||
       selectedMonth < 0 ||
       selectedMonth > 11
     ) {
-      selectedMonth = new Date().getMonth();
+
+      selectedMonth =
+        new Date().getMonth();
+
     }
 
 
     function money(value) {
-      const number = Number(value) || 0;
+
+      const number =
+        Number(value) || 0;
 
       return (
         number.toFixed(2) +
         " GEL"
       );
+
     }
 
 
@@ -1013,15 +1068,20 @@
 
           button.type = "button";
 
-          button.className = "month";
+          button.className =
+            "month";
+
 
           if (
             index === selectedMonth
           ) {
+
             button.classList.add(
               "selected"
             );
+
           }
+
 
           button.textContent =
             monthName;
@@ -1033,9 +1093,13 @@
           badge.className =
             "month-w";
 
-          badge.textContent = "W";
+          badge.textContent =
+            "W";
 
-          button.appendChild(badge);
+
+          button.appendChild(
+            badge
+          );
 
 
           button.addEventListener(
@@ -1051,8 +1115,10 @@
           monthsContainer.appendChild(
             button
           );
+
         }
       );
+
     }
 
 
@@ -1066,19 +1132,24 @@
           ".month"
         );
 
-      allMonths.forEach(btn => {
 
-        btn.classList.remove(
-          "selected"
-        );
+      allMonths.forEach(
+        btn => {
 
-        btn.classList.remove(
-          "month-select-animate"
-        );
-      });
+          btn.classList.remove(
+            "selected"
+          );
+
+          btn.classList.remove(
+            "month-select-animate"
+          );
+
+        }
+      );
 
 
-      selectedMonth = index;
+      selectedMonth =
+        index;
 
 
       localStorage.setItem(
@@ -1101,6 +1172,7 @@
 
 
       calculateSalary();
+
     }
 
 
@@ -1142,6 +1214,7 @@
         "deduction-negative",
         deduction > 0
       );
+
     }
 
 
@@ -1152,25 +1225,30 @@
           salaryInput.value
         ) || 0;
 
+
       const overtime =
         Number(
           overtimeInput.value
         ) || 0;
+
 
       const night =
         Number(
           nightInput.value
         ) || 0;
 
+
       const holiday =
         Number(
           holidayInput.value
         ) || 0;
 
+
       const holidayNight =
         Number(
           holidayNightInput.value
         ) || 0;
+
 
       const unpaidLeaveDays =
         Number(
@@ -1180,6 +1258,7 @@
 
       const scheduledHours =
         monthHours[selectedMonth];
+
 
       const scheduledWorkDays =
         scheduledWorkdays[selectedMonth];
@@ -1229,8 +1308,10 @@
 
       const deduction =
         scheduledWorkDays > 0
-          ? (salary / scheduledWorkDays) *
-            unpaidLeaveDays
+          ? (
+              salary /
+              scheduledWorkDays
+            ) * unpaidLeaveDays
           : 0;
 
 
@@ -1243,14 +1324,18 @@
       scheduledHoursEl.textContent =
         scheduledHours;
 
+
       scheduledDaysEl.textContent =
         scheduledWorkDays;
+
 
       hourlySalaryEl.textContent =
         money(hourlySalary);
 
+
       baseSalaryEl.textContent =
         money(baseSalary);
+
 
       grossTotalEl.textContent =
         money(grossTotal);
@@ -1259,14 +1344,18 @@
       overtimePayEl.textContent =
         money(overtimePay);
 
+
       nightPayEl.textContent =
         money(nightPay);
+
 
       holidayPayEl.textContent =
         money(holidayPay);
 
+
       holidayNightPayEl.textContent =
         money(holidayNightPay);
+
 
       extraPayEl.textContent =
         money(extraPay);
@@ -1286,6 +1375,7 @@
         extraPay,
         deduction
       );
+
     }
 
 
@@ -1303,37 +1393,44 @@
 
       document.getElementById(
         "title"
-      ).textContent = t.title;
+      ).textContent =
+        t.title;
 
 
       document.getElementById(
         "salaryLabel"
-      ).textContent = t.salary;
+      ).textContent =
+        t.salary;
 
 
       document.getElementById(
         "monthLabel"
-      ).textContent = t.months;
+      ).textContent =
+        t.months;
 
 
       document.getElementById(
         "hoursTitle"
-      ).textContent = t.hours;
+      ).textContent =
+        t.hours;
 
 
       document.getElementById(
         "overtimeLabel"
-      ).textContent = t.overtime;
+      ).textContent =
+        t.overtime;
 
 
       document.getElementById(
         "nightLabel"
-      ).textContent = t.night;
+      ).textContent =
+        t.night;
 
 
       document.getElementById(
         "holidayLabel"
-      ).textContent = t.holiday;
+      ).textContent =
+        t.holiday;
 
 
       document.getElementById(
@@ -1437,6 +1534,7 @@
 
 
       renderMonths();
+
     }
 
 
@@ -1458,7 +1556,9 @@
         "language-animate"
       );
 
+
       void languageBtn.offsetWidth;
+
 
       languageBtn.classList.add(
         "language-animate"
@@ -1468,6 +1568,7 @@
       updateTranslations();
 
       calculateSalary();
+
     }
 
 
@@ -1492,107 +1593,149 @@
     ];
 
 
-    hourInputs.forEach(input => {
+    hourInputs.forEach(
+      input => {
 
-      input.addEventListener(
-        "focus",
-        () => {
+        input.addEventListener(
+          "focus",
+          () => {
 
-          const value =
-            Number(input.value);
+            const value =
+              Number(input.value);
 
-          if (value === 0) {
-            input.value = "";
-            input.classList.remove(
-              "placeholder-zero"
-            );
+
+            if (value === 0) {
+
+              input.value = "";
+
+              input.classList.remove(
+                "placeholder-zero"
+              );
+
+            }
+
           }
-        }
-      );
+        );
 
 
-      input.addEventListener(
-        "blur",
-        () => {
-
-          if (
-            input.value === "" ||
-            Number(input.value) < 0
-          ) {
+        input.addEventListener(
+          "blur",
+          () => {
 
             if (
-              input ===
-              unpaidLeaveInput
+              input.value === "" ||
+              Number(input.value) < 0
             ) {
-              input.value = "0";
-            } else {
-              input.value = "0.00";
+
+              if (
+                input ===
+                unpaidLeaveInput
+              ) {
+
+                input.value =
+                  "0";
+
+              } else {
+
+                input.value =
+                  "0.00";
+
+              }
+
             }
+
+
+            if (
+              Number(input.value) === 0
+            ) {
+
+              input.classList.add(
+                "placeholder-zero"
+              );
+
+            } else {
+
+              input.classList.remove(
+                "placeholder-zero"
+              );
+
+            }
+
+
+            calculateSalary();
+
           }
-
-          if (
-            Number(input.value) === 0
-          ) {
-            input.classList.add(
-              "placeholder-zero"
-            );
-          } else {
-            input.classList.remove(
-              "placeholder-zero"
-            );
-          }
-
-          calculateSalary();
-        }
-      );
-
-
-      input.addEventListener(
-        "input",
-        () => {
-
-          if (
-            Number(input.value) > 0
-          ) {
-            input.classList.remove(
-              "placeholder-zero"
-            );
-          }
-
-          calculateSalary();
-        }
-      );
-
-
-      if (
-        Number(input.value) === 0
-      ) {
-        input.classList.add(
-          "placeholder-zero"
         );
+
+
+        input.addEventListener(
+          "input",
+          () => {
+
+            if (
+              Number(input.value) > 0
+            ) {
+
+              input.classList.remove(
+                "placeholder-zero"
+              );
+
+            }
+
+
+            calculateSalary();
+
+          }
+        );
+
+
+        if (
+          Number(input.value) === 0
+        ) {
+
+          input.classList.add(
+            "placeholder-zero"
+          );
+
+        }
+
       }
-    });
+    );
 
 
     clearBtn.addEventListener(
       "click",
       () => {
 
-        overtimeInput.value = "0.00";
-        nightInput.value = "0.00";
-        holidayInput.value = "0.00";
-        holidayNightInput.value = "0.00";
-        unpaidLeaveInput.value = "0";
+        overtimeInput.value =
+          "0.00";
+
+        nightInput.value =
+          "0.00";
+
+        holidayInput.value =
+          "0.00";
+
+        holidayNightInput.value =
+          "0.00";
+
+        unpaidLeaveInput.value =
+          "0";
 
 
-        hourInputs.forEach(input => {
-          input.classList.add(
-            "placeholder-zero"
-          );
-        });
+        hourInputs.forEach(
+          input => {
+
+            input.classList.add(
+              "placeholder-zero"
+            );
+
+          }
+        );
 
 
         calculateSalary();
+
       }
     );
 
@@ -1605,15 +1748,20 @@
     if (
       "serviceWorker" in navigator
     ) {
+
       window.addEventListener(
         "load",
         () => {
+
           navigator.serviceWorker.register(
             "./sw.js"
           );
+
         }
       );
+
     }
+
   </script>
 </body>
 </html>
