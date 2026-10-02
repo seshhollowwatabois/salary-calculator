@@ -12,6 +12,9 @@
 
   <link rel="manifest" href="./manifest.webmanifest">
 
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>">
+
   <title>Salary Calculator 🍏</title>
 
   <style>
@@ -842,7 +845,7 @@
         breakdownOvertime: "⏱️ ზეგანაკვეთური",
         breakdownNight: "🌙 ღამის დანამატი",
         breakdownHoliday: "🏖️ სადღესასწაულო დღე",
-        breakdownHolidayNight: "🌙🏖️ სადღესასწა��ლო ღამის",
+        breakdownHolidayNight: "🌙🏖️ სადღესასწაულო ღამის",
 
         extra: "დამატებითი ანაზღაურება"
       }
@@ -1000,218 +1003,245 @@
       /* Input: update placeholder class AND calculate while typing */
       input.addEventListener("input", () => {
         updatePlaceholderClass(input);
-        calculate();
+        calculateSalary();
       });
     }
 
-    hourInputs.forEach(input => setupHourInput(input));
+    /* Setup all hour inputs */
+    hourInputs.forEach(setupHourInput);
 
 
     /* =========================
-       LANGUAGE SWITCHING
+       CALCULATE SALARY
     ========================= */
 
-    function setLanguage(lang) {
-      const t = translations[lang];
+    function calculateSalary() {
 
-      document.documentElement.lang = lang;
-      localStorage.setItem("salaryCalculatorLanguage", lang);
-
-      /* Update all labels and text */
-      document.getElementById("title").textContent =
-        t.title;
-      document.getElementById("salaryLabel").textContent =
-        t.salary;
-      document.getElementById("monthsLabel").textContent =
-        t.months;
-
-      document.getElementById("overtimeLabel").textContent =
-        t.overtime;
-      document.getElementById("nightLabel").textContent =
-        t.night;
-      document.getElementById("holidayLabel").textContent =
-        t.holiday;
-      document.getElementById("holidayNightLabel").textContent =
-        t.holidayNight;
-
-      document.getElementById("clearButton").textContent =
-        t.clear;
-
-      document.getElementById("scheduledLabel").textContent =
-        t.scheduled;
-      document.getElementById("hourlyLabel").textContent =
-        t.hourly;
-      document.getElementById("baseLabel").textContent =
-        t.base;
-      document.getElementById("grossLabel").textContent =
-        t.gross;
-
-      document.getElementById("breakdownTitle").textContent =
-        t.breakdown;
-      document.getElementById("breakdownOvertime").textContent =
-        t.breakdownOvertime;
-      document.getElementById("breakdownNight").textContent =
-        t.breakdownNight;
-      document.getElementById("breakdownHoliday").textContent =
-        t.breakdownHoliday;
-      document.getElementById("breakdownHolidayNight").textContent =
-        t.breakdownHolidayNight;
-
-      document.getElementById("extraLabel").textContent =
-        t.extra;
-
-      /* Update month names */
-      updateMonthButtons();
-
-      currentLanguage = lang;
-    }
-
-
-    /* =========================
-       MONTH BUTTONS
-    ========================= */
-
-    function updateMonthButtons() {
-      const monthNameArray = monthNames[currentLanguage];
-
-      monthsContainer.innerHTML = "";
-
-      monthNameArray.forEach((name, index) => {
-        const button = document.createElement("button");
-
-        button.className = "month";
-        button.type = "button";
-        button.textContent = name;
-        button.dataset.month = index;
-
-        if (selectedMonth === index) {
-          button.classList.add("selected");
-        }
-
-        button.addEventListener("click", () => selectMonth(index, button));
-
-        monthsContainer.appendChild(button);
-      });
-    }
-
-    function selectMonth(monthIndex, buttonElement) {
-      const previousButton = monthsContainer.querySelector(".month.selected");
-
-      if (previousButton) {
-        previousButton.classList.remove("selected");
-      }
-
-      selectedMonth = monthIndex;
-
-      buttonElement.classList.add("selected");
-      buttonElement.classList.add("month-select-animate");
-
-      setTimeout(() => {
-        buttonElement.classList.remove("month-select-animate");
-      }, 350);
-
-      calculate();
-    }
-
-
-    /* =========================
-       CALCULATE
-    ========================= */
-
-    function calculate() {
       if (selectedMonth === null) {
-        document.getElementById("scheduledHours").textContent = "—";
-        document.getElementById("hourlySalary").textContent = "—";
-        document.getElementById("baseSalary").textContent = "—";
-        document.getElementById("grossTotal").textContent = "—";
-
-        document.getElementById("overtimePay").textContent = "0.00 GEL";
-        document.getElementById("nightPay").textContent = "0.00 GEL";
-        document.getElementById("holidayPay").textContent = "0.00 GEL";
-        document.getElementById("holidayNightPay").textContent = "0.00 GEL";
-        document.getElementById("extraPay").textContent = "0.00 GEL";
-
         return;
       }
 
-      const monthlySalary = Number(salaryInput.value);
-      const scheduledHoursPerMonth = monthHours[selectedMonth];
-
+      const salary = Number(salaryInput.value);
       const overtime = Number(overtimeInput.value) || 0;
       const night = Number(nightInput.value) || 0;
       const holiday = Number(holidayInput.value) || 0;
       const holidayNight = Number(holidayNightInput.value) || 0;
 
-      const hourlySalary = monthlySalary / scheduledHoursPerMonth;
+      const scheduledHours =
+        monthHours[selectedMonth];
 
-      const baseSalary = hourlySalary * scheduledHoursPerMonth;
+      const hourlySalary =
+        salary / scheduledHours;
 
+      const baseSalary = hourlySalary * scheduledHours;
       const overtimePay = hourlySalary * overtime * 2;
       const nightPay = hourlySalary * night * 1.4;
       const holidayPay = hourlySalary * holiday * 1.25;
-      const holidayNightPay = hourlySalary * holidayNight * 1.5;
+      const holidayNightPay =
+        hourlySalary * holidayNight * 1.5;
 
-      const extraPay = overtimePay + nightPay + holidayPay + holidayNightPay;
+      const extraPay =
+        overtimePay + nightPay + holidayPay + holidayNightPay;
 
       const grossTotal = baseSalary + extraPay;
 
-      document.getElementById("scheduledHours").textContent =
-        scheduledHoursPerMonth.toFixed(0);
-      document.getElementById("hourlySalary").textContent =
+      /* Update display */
+
+      document.getElementById("scheduledHours")
+        .textContent = scheduledHours.toFixed(0);
+
+      document.getElementById("hourlySalary")
+        .textContent =
         hourlySalary.toFixed(2) + " GEL";
-      document.getElementById("baseSalary").textContent =
+
+      document.getElementById("baseSalary")
+        .textContent =
         baseSalary.toFixed(2) + " GEL";
-      document.getElementById("grossTotal").textContent =
+
+      document.getElementById("grossTotal")
+        .textContent =
         grossTotal.toFixed(2) + " GEL";
 
-      document.getElementById("overtimePay").textContent =
+      document.getElementById("overtimePay")
+        .textContent =
         overtimePay.toFixed(2) + " GEL";
-      document.getElementById("nightPay").textContent =
+
+      document.getElementById("nightPay")
+        .textContent =
         nightPay.toFixed(2) + " GEL";
-      document.getElementById("holidayPay").textContent =
+
+      document.getElementById("holidayPay")
+        .textContent =
         holidayPay.toFixed(2) + " GEL";
-      document.getElementById("holidayNightPay").textContent =
+
+      document.getElementById("holidayNightPay")
+        .textContent =
         holidayNightPay.toFixed(2) + " GEL";
-      document.getElementById("extraPay").textContent =
+
+      document.getElementById("extraPay")
+        .textContent =
         extraPay.toFixed(2) + " GEL";
+
     }
 
 
     /* =========================
-       EVENT LISTENERS
+       MONTH SELECTION
     ========================= */
 
-    salaryInput.addEventListener("change", calculate);
+    function createMonthButtons() {
 
-    clearButton.addEventListener("click", () => {
-      hourInputs.forEach(input => {
-        input.value = "0.00";
-        input.classList.add("placeholder-zero");
+      const months = monthNames[currentLanguage];
+
+      months.forEach((month, index) => {
+
+        const button = document.createElement("button");
+
+        button.textContent = month;
+        button.className = "month";
+        button.type = "button";
+
+        button.addEventListener("click", () => {
+          selectMonth(index, button);
+        });
+
+        monthsContainer.appendChild(button);
+
       });
 
-      calculate();
-    });
+    }
 
-    languageButton.addEventListener("click", () => {
-      languageButton.classList.add("animate");
+    function selectMonth(index, element) {
 
-      setTimeout(() => {
-        languageButton.classList.remove("animate");
-      }, 550);
+      const allMonths =
+        document.querySelectorAll(".month");
 
-      const newLanguage = currentLanguage === "en" ? "ka" : "en";
+      allMonths.forEach((btn) => {
+        btn.classList.remove("selected");
+        btn.classList.remove("month-select-animate");
+      });
 
-      setLanguage(newLanguage);
-    });
+      element.classList.add("selected");
+      element.classList.add("month-select-animate");
+
+      selectedMonth = index;
+
+      calculateSalary();
+
+    }
 
 
     /* =========================
-       INITIALIZATION
+       LANGUAGE SWITCH
     ========================= */
 
-    setLanguage(currentLanguage);
-    updateMonthButtons();
-    calculate();
+    function switchLanguage() {
+
+      const newLanguage =
+        currentLanguage === "en" ? "ka" : "en";
+
+      currentLanguage = newLanguage;
+
+      localStorage.setItem(
+        "salaryCalculatorLanguage",
+        newLanguage
+      );
+
+      document.documentElement.lang = newLanguage;
+
+      document.getElementById("title").textContent =
+        translations[newLanguage].title;
+
+      document.getElementById("salaryLabel").textContent =
+        translations[newLanguage].salary;
+
+      document.getElementById("monthsLabel").textContent =
+        translations[newLanguage].months;
+
+      document.getElementById("overtimeLabel").textContent =
+        translations[newLanguage].overtime;
+
+      document.getElementById("nightLabel").textContent =
+        translations[newLanguage].night;
+
+      document.getElementById("holidayLabel").textContent =
+        translations[newLanguage].holiday;
+
+      document.getElementById("holidayNightLabel").textContent =
+        translations[newLanguage].holidayNight;
+
+      document.getElementById("clearButton").textContent =
+        translations[newLanguage].clear;
+
+      document.getElementById("scheduledLabel").textContent =
+        translations[newLanguage].scheduled;
+
+      document.getElementById("hourlyLabel").textContent =
+        translations[newLanguage].hourly;
+
+      document.getElementById("baseLabel").textContent =
+        translations[newLanguage].base;
+
+      document.getElementById("grossLabel").textContent =
+        translations[newLanguage].gross;
+
+      document.getElementById("breakdownTitle").textContent =
+        translations[newLanguage].breakdown;
+
+      document.getElementById("breakdownOvertime").textContent =
+        translations[newLanguage].breakdownOvertime;
+
+      document.getElementById("breakdownNight").textContent =
+        translations[newLanguage].breakdownNight;
+
+      document.getElementById("breakdownHoliday").textContent =
+        translations[newLanguage].breakdownHoliday;
+
+      document.getElementById("breakdownHolidayNight").textContent =
+        translations[newLanguage].breakdownHolidayNight;
+
+      document.getElementById("extraLabel").textContent =
+        translations[newLanguage].extra;
+
+      languageButton.classList.add("animate");
+
+      languageButton.addEventListener(
+        "animationend",
+        () => {
+          languageButton.classList.remove("animate");
+        },
+        { once: true }
+      );
+
+      monthsContainer.innerHTML = "";
+      createMonthButtons();
+
+    }
+
+    languageButton.addEventListener("click", switchLanguage);
+
+
+    /* =========================
+       INIT
+    ========================= */
+
+    document.documentElement.lang = currentLanguage;
+
+    createMonthButtons();
+
+    hourInputs.forEach(updatePlaceholderClass);
+
+    salaryInput.addEventListener("change", calculateSalary);
+    clearButton.addEventListener("click", () => {
+
+      hourInputs.forEach((input) => {
+        input.value = "0.00";
+        updatePlaceholderClass(input);
+      });
+
+      calculateSalary();
+
+    });
 
   </script>
 
