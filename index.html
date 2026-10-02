@@ -50,7 +50,7 @@
       font-size: 14px; font-weight: 700; cursor: pointer; user-select: none; transition: background 0.2s ease, color 0.2s ease, transform 0.12s ease;
     }
     .month:active { transform: scale(0.94); }
-    .month.selected { background: #009de0; color: #fff; }
+    .month.selected { background: #e53935; color: #fff; }
     .month.month-select-animate { animation: monthSelect 0.35s cubic-bezier(.34, 1.56, .64, 1); }
     @keyframes monthSelect {
       0% { transform: scale(0.88); }
@@ -58,7 +58,7 @@
       100% { transform: scale(1); }
     }
     .month.selected::before {
-      content: "W"; width: 20px; height: 20px; margin-right: 5px; border-radius: 50%; background: #fff; color: #009de0;
+      content: "W"; width: 20px; height: 20px; margin-right: 5px; border-radius: 50%; background: #fff; color: #e53935;
       display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900;
     }
     .hours-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -68,7 +68,7 @@
       width: 100%; height: 50px; border: 1px solid #2a3345; border-radius: 14px; background: #0f1522; color: white; padding: 0 13px;
       font-size: 17px; font-weight: 700; outline: none; transition: border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease, opacity 0.2s ease;
     }
-    .hour-input:focus { border-color: #009de0; box-shadow: 0 0 0 3px rgba(0,157,224,0.12); }
+    .hour-input:focus { border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239,68,68,0.12); }
     .hour-input.placeholder-zero { color: #687386; opacity: 0.65; }
     .clear-button {
       width: 100%; min-height: 46px; margin-top: 12px; border: 0; border-radius: 13px; background: #202838; color: #c7cfdb;
@@ -84,6 +84,9 @@
     .breakdown { display: grid; gap: 9px; }
     .breakdown-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; color: #aeb7c7; font-size: 13px; }
     .breakdown-row strong { color: #fff; font-size: 14px; text-align: right; }
+    .breakdown-addition strong { color: #34d399; }
+    .breakdown-deduction { color: #ff6b6b; }
+    .breakdown-deduction strong { color: #ff6b6b; }
     .extra-total { margin-top: 5px; padding-top: 10px; border-top: 1px solid #293244; }
     .extra-total strong { color: #4ecbff; }
     @media (max-width: 380px) {
@@ -170,21 +173,25 @@
     <div class="card">
       <h2 id="breakdownTitle" class="breakdown-title">📊 Pay Breakdown</h2>
       <div class="breakdown">
-        <div class="breakdown-row">
+        <div class="breakdown-row breakdown-addition">
           <span id="breakdownOvertime">⏱️ Overtime</span>
           <strong id="overtimePay">0.00 GEL</strong>
         </div>
-        <div class="breakdown-row">
+        <div class="breakdown-row breakdown-addition">
           <span id="breakdownNight">🌙 Night Addition</span>
           <strong id="nightPay">0.00 GEL</strong>
         </div>
-        <div class="breakdown-row">
+        <div class="breakdown-row breakdown-addition">
           <span id="breakdownHoliday">🏖️ Bank Holiday</span>
           <strong id="holidayPay">0.00 GEL</strong>
         </div>
-        <div class="breakdown-row">
+        <div class="breakdown-row breakdown-addition">
           <span id="breakdownHolidayNight">🌙🏖️ Bank Holiday Night</span>
           <strong id="holidayNightPay">0.00 GEL</strong>
+        </div>
+        <div class="breakdown-row breakdown-deduction">
+          <span id="breakdownDeduction">📉 Unpaid Leave Deduction</span>
+          <strong id="deductionPay">0.00 GEL</strong>
         </div>
         <div class="breakdown-row extra-total">
           <span id="extraLabel">Extra Pay</span>
@@ -215,6 +222,7 @@
         breakdownNight: "🌙 Night Addition",
         breakdownHoliday: "🏖️ Bank Holiday",
         breakdownHolidayNight: "🌙🏖️ Bank Holiday Night",
+        breakdownDeduction: "📉 Unpaid Leave Deduction",
         extra: "Extra Pay"
       },
       ka: {
@@ -236,6 +244,7 @@
         breakdownNight: "🌙 ღამის დანამატი",
         breakdownHoliday: "🏖️ სადღესასწაულო დღე",
         breakdownHolidayNight: "🌙🏖️ სადღესასწაულო ღამის",
+        breakdownDeduction: "📉 გაუფასიურებული დღეების გამოკლება",
         extra: "დამატებითი ანაზღაურება"
       }
     };
@@ -328,6 +337,7 @@
       document.getElementById("nightPay").textContent = `${nightPay.toFixed(2)} GEL`;
       document.getElementById("holidayPay").textContent = `${holidayPay.toFixed(2)} GEL`;
       document.getElementById("holidayNightPay").textContent = `${holidayNightPay.toFixed(2)} GEL`;
+      document.getElementById("deductionPay").textContent = `-${deduction.toFixed(2)} GEL`;
       document.getElementById("extraPay").textContent = `${extraPay.toFixed(2)} GEL`;
     }
 
@@ -381,6 +391,7 @@
       document.getElementById("breakdownNight").textContent = translations[newLanguage].breakdownNight;
       document.getElementById("breakdownHoliday").textContent = translations[newLanguage].breakdownHoliday;
       document.getElementById("breakdownHolidayNight").textContent = translations[newLanguage].breakdownHolidayNight;
+      document.getElementById("breakdownDeduction").textContent = translations[newLanguage].breakdownDeduction;
       document.getElementById("extraLabel").textContent = translations[newLanguage].extra;
 
       languageButton.classList.add("animate");
