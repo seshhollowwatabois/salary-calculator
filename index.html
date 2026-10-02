@@ -50,7 +50,8 @@
       font-size: 14px; font-weight: 700; cursor: pointer; user-select: none; transition: background 0.2s ease, color 0.2s ease, transform 0.12s ease;
     }
     .month:active { transform: scale(0.94); }
-    .month.selected { background: #e53935; color: #fff; }
+    /* Selected month should be blue */
+    .month.selected { background: #009de0; color: #fff; }
     .month.month-select-animate { animation: monthSelect 0.35s cubic-bezier(.34, 1.56, .64, 1); }
     @keyframes monthSelect {
       0% { transform: scale(0.88); }
@@ -58,7 +59,7 @@
       100% { transform: scale(1); }
     }
     .month.selected::before {
-      content: "W"; width: 20px; height: 20px; margin-right: 5px; border-radius: 50%; background: #fff; color: #e53935;
+      content: "W"; width: 20px; height: 20px; margin-right: 5px; border-radius: 50%; background: #fff; color: #009de0;
       display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900;
     }
     .hours-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -152,6 +153,10 @@
     <div class="card">
       <div class="summary">
         <div class="summary-row">
+          <span id="scheduledDaysLabel">Scheduled Days</span>
+          <strong id="scheduledDays">—</strong>
+        </div>
+        <div class="summary-row">
           <span id="scheduledLabel">Scheduled Hours</span>
           <strong id="scheduledHours">—</strong>
         </div>
@@ -214,6 +219,7 @@
         unpaidLeave: "📅 Unpaid Leave Days",
         clear: "Clear Hours",
         scheduled: "Scheduled Hours",
+        scheduledDays: "Scheduled Days",
         hourly: "Hourly Salary",
         base: "Base Salary",
         gross: "Gross Total",
@@ -236,6 +242,7 @@
         unpaidLeave: "📅 გაუფასიურებული დღეები",
         clear: "საათების გასუფთავება",
         scheduled: "გეგმიური საათები",
+        scheduledDays: "გეგმიური დღეები",
         hourly: "საათობრივი ხელფასი",
         base: "ძირითადი ხელფასი",
         gross: "სრული ხელფასი",
@@ -329,6 +336,7 @@
       const deduction = (salary / scheduledWorkDays) * unpaidLeaveDays;
       const grossTotal = baseSalary + extraPay - deduction;
 
+      document.getElementById("scheduledDays").textContent = scheduledWorkDays.toFixed(0);
       document.getElementById("scheduledHours").textContent = scheduledHours.toFixed(0);
       document.getElementById("hourlySalary").textContent = `${hourlySalary.toFixed(2)} GEL`;
       document.getElementById("baseSalary").textContent = `${baseSalary.toFixed(2)} GEL`;
@@ -383,6 +391,7 @@
       document.getElementById("unpaidLeaveLabel").textContent = translations[newLanguage].unpaidLeave;
       document.getElementById("clearButton").textContent = translations[newLanguage].clear;
       document.getElementById("scheduledLabel").textContent = translations[newLanguage].scheduled;
+      document.getElementById("scheduledDaysLabel").textContent = translations[newLanguage].scheduledDays;
       document.getElementById("hourlyLabel").textContent = translations[newLanguage].hourly;
       document.getElementById("baseLabel").textContent = translations[newLanguage].base;
       document.getElementById("grossLabel").textContent = translations[newLanguage].gross;
