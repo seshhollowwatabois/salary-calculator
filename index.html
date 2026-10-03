@@ -668,6 +668,30 @@
 
         </div>
 
+        <div
+          class="hour-group"
+          style="grid-column: 1 / -1;"
+        >
+
+          <label
+            id="donatedNikolozLabel"
+            class="hour-label"
+            for="donatedNikoloz"
+          >
+            💙 Donated to Nikoloz
+          </label>
+
+          <input
+            id="donatedNikoloz"
+            class="hour-input"
+            type="text"
+            inputmode="decimal"
+            autocomplete="off"
+            value="0"
+          >
+
+        </div>
+
         <!-- FITPASS -->
 
         <div class="hour-group fitpass-group">
@@ -1245,6 +1269,9 @@
     const unpaidLeaveInput =
       document.getElementById("unpaidLeave");
 
+    const donatedNikolozInput =
+      document.getElementById("donatedNikoloz");
+
     const fitpassMinus =
       document.getElementById("fitpassMinus");
 
@@ -1576,11 +1603,15 @@
         fitpassMembers *
         FITPASS_PRICE;
 
+      const donatedNikoloz =
+        getNumber(donatedNikolozInput);
+
       const grossTotal =
         baseSalary +
         extraPay -
         deduction -
-        fitpassDeduction;
+        fitpassDeduction -
+        donatedNikoloz;
 
       scheduledHoursEl.textContent =
         scheduledHours + " h";
@@ -1811,7 +1842,8 @@
       nightInput,
       holidayInput,
       holidayNightInput,
-      unpaidLeaveInput
+      unpaidLeaveInput,
+      donatedNikolozInput
 
     ];
 
@@ -2035,6 +2067,8 @@
         );
 
         fitpassMembers = 0;
+        donatedNikolozInput.value = "0";
+        donatedNikolozInput.classList.add("placeholder-zero");
 
         calculateSalary();
 
