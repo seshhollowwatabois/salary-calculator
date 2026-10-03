@@ -279,6 +279,57 @@
       color: #6f7a8f;
     }
 
+    .fitpass-group {
+      grid-column: 1 / -1;
+    }
+
+    .fitpass-control {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      min-height: 52px;
+      padding: 5px;
+      border: 1px solid #293247;
+      border-radius: 14px;
+      background: #101725;
+    }
+
+    .fitpass-btn {
+      height: 42px;
+      min-width: 52px;
+      border: 0;
+      border-radius: 11px;
+      background: #151b29;
+      color: #ffffff;
+      font-size: 26px;
+      font-weight: 500;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .fitpass-btn:active {
+      transform: scale(0.94);
+      background: #009DE0;
+    }
+
+    .fitpass-count {
+      min-width: 42px;
+      text-align: center;
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .fitpass-price {
+      margin-top: 6px;
+      color: #ff3b30;
+      font-size: 11px;
+      font-weight: 700;
+      text-align: right;
+    }
+
     .clear-btn {
       width: 100%;
       height: 46px;
@@ -585,6 +636,55 @@
 
         </div>
 
+        <!-- FITPASS -->
+
+        <div class="hour-group fitpass-group">
+
+          <label
+            id="fitpassLabel"
+            class="hour-label"
+          >
+            🎟️ FitPass Members
+          </label>
+
+          <div class="fitpass-control">
+
+            <button
+              id="fitpassMinus"
+              class="fitpass-btn"
+              type="button"
+              aria-label="Remove FitPass member"
+            >
+              −
+            </button>
+
+            <div
+              id="fitpassCount"
+              class="fitpass-count"
+            >
+              0
+            </div>
+
+            <button
+              id="fitpassPlus"
+              class="fitpass-btn"
+              type="button"
+              aria-label="Add FitPass member"
+            >
+              +
+            </button>
+
+          </div>
+
+          <div
+            id="fitpassPrice"
+            class="fitpass-price"
+          >
+            −85 GEL per member
+          </div>
+
+        </div>
+
       </div>
 
       <button
@@ -806,6 +906,24 @@
         <div class="breakdown-row">
 
           <div
+            id="breakdownFitpass"
+            class="breakdown-label"
+          >
+            🎟️ FitPass Deduction
+          </div>
+
+          <div
+            id="fitpassDeduction"
+            class="breakdown-value"
+          >
+            0.00 GEL
+          </div>
+
+        </div>
+
+        <div class="breakdown-row">
+
+          <div
             id="extraLabel"
             class="breakdown-label"
           >
@@ -828,6 +946,7 @@
   </main>
 
   <script>
+
     const monthHours = [
       144, 160, 168, 152,
       152, 176, 184, 160,
@@ -887,6 +1006,12 @@
         unpaidLeave:
           "📅 Unpaid Leave Days",
 
+        fitpass:
+          "🎟️ FitPass Members",
+
+        fitpassPrice:
+          "−85 GEL per member",
+
         clear:
           "Clear Hours",
 
@@ -926,6 +1051,9 @@
         breakdownDeduction:
           "📉 Unpaid Leave Deduction",
 
+        breakdownFitpass:
+          "🎟️ FitPass Deduction",
+
         extra:
           "Extra Pay"
 
@@ -959,6 +1087,12 @@
 
         unpaidLeave:
           "📅 უხელფასო შვებულების დღეები",
+
+        fitpass:
+          "🎟️ FitPass წევრები",
+
+        fitpassPrice:
+          "−85 ლარი თითო წევრზე",
 
         clear:
           "საათების გასუფთავება",
@@ -999,6 +1133,9 @@
         breakdownDeduction:
           "📉 უხელფასო დღეების გამოკლება",
 
+        breakdownFitpass:
+          "🎟️ FitPass-ის გამოკლება",
+
         extra:
           "დამატებითი ანაზღაურება"
 
@@ -1033,6 +1170,15 @@
     const unpaidLeaveInput =
       document.getElementById("unpaidLeave");
 
+    const fitpassMinus =
+      document.getElementById("fitpassMinus");
+
+    const fitpassPlus =
+      document.getElementById("fitpassPlus");
+
+    const fitpassCountEl =
+      document.getElementById("fitpassCount");
+
     const clearBtn =
       document.getElementById("clearBtn");
 
@@ -1066,6 +1212,9 @@
     const deductionEl =
       document.getElementById("deduction");
 
+    const fitpassDeductionEl =
+      document.getElementById("fitpassDeduction");
+
     const extraPayEl =
       document.getElementById("extraPay");
 
@@ -1080,6 +1229,10 @@
           "salaryCalculatorMonth"
         )
       );
+
+    let fitpassMembers = 0;
+
+    const FITPASS_PRICE = 85;
 
     if (
       !Number.isInteger(selectedMonth) ||
@@ -1106,6 +1259,7 @@
       return Number.isFinite(number)
         ? number
         : 0;
+
     }
 
     function money(value) {
@@ -1131,9 +1285,11 @@
           button.className = "month";
 
           if (index === selectedMonth) {
+
             button.classList.add(
               "selected"
             );
+
           }
 
           button.textContent =
@@ -1147,7 +1303,9 @@
 
           badge.textContent = "W";
 
-          button.appendChild(badge);
+          button.appendChild(
+            badge
+          );
 
           button.addEventListener(
             "click",
@@ -1216,7 +1374,8 @@
       holidayPay,
       holidayNightPay,
       extraPay,
-      deduction
+      deduction,
+      fitpassDeduction
     ) {
 
       overtimePayEl.classList.toggle(
@@ -1247,6 +1406,11 @@
       deductionEl.classList.toggle(
         "deduction-negative",
         deduction > 0
+      );
+
+      fitpassDeductionEl.classList.toggle(
+        "deduction-negative",
+        fitpassDeduction > 0
       );
 
     }
@@ -1333,10 +1497,15 @@
             unpaidLeaveDays
           : 0;
 
+      const fitpassDeduction =
+        fitpassMembers *
+        FITPASS_PRICE;
+
       const grossTotal =
         baseSalary +
         extraPay -
-        deduction;
+        deduction -
+        fitpassDeduction;
 
       scheduledHoursEl.textContent =
         scheduledHours + " h";
@@ -1370,8 +1539,16 @@
           ? "-" + money(deduction)
           : money(0);
 
+      fitpassDeductionEl.textContent =
+        fitpassDeduction > 0
+          ? "-" + money(fitpassDeduction)
+          : money(0);
+
       extraPayEl.textContent =
         money(extraPay);
+
+      fitpassCountEl.textContent =
+        fitpassMembers;
 
       updateExtraColors(
         overtimePay,
@@ -1379,7 +1556,8 @@
         holidayPay,
         holidayNightPay,
         extraPay,
-        deduction
+        deduction,
+        fitpassDeduction
       );
 
     }
@@ -1431,6 +1609,16 @@
         "unpaidLeaveLabel"
       ).textContent =
         t.unpaidLeave;
+
+      document.getElementById(
+        "fitpassLabel"
+      ).textContent =
+        t.fitpass;
+
+      document.getElementById(
+        "fitpassPrice"
+      ).textContent =
+        t.fitpassPrice;
 
       clearBtn.textContent =
         t.clear;
@@ -1494,6 +1682,11 @@
         "breakdownDeduction"
       ).textContent =
         t.breakdownDeduction;
+
+      document.getElementById(
+        "breakdownFitpass"
+      ).textContent =
+        t.breakdownFitpass;
 
       document.getElementById(
         "extraLabel"
@@ -1575,7 +1768,9 @@
             input.value === "," ||
             input.value === "."
           ) {
+
             input.value = "0";
+
           }
 
           const number =
@@ -1585,15 +1780,19 @@
             !Number.isFinite(number) ||
             number < 0
           ) {
+
             input.value = "0";
+
           }
 
           if (
             getNumber(input) === 0
           ) {
+
             input.classList.add(
               "placeholder-zero"
             );
+
           }
 
           calculateSalary();
@@ -1711,6 +1910,34 @@
 
     });
 
+    fitpassMinus.addEventListener(
+      "click",
+      () => {
+
+        if (
+          fitpassMembers > 0
+        ) {
+
+          fitpassMembers--;
+
+          calculateSalary();
+
+        }
+
+      }
+    );
+
+    fitpassPlus.addEventListener(
+      "click",
+      () => {
+
+        fitpassMembers++;
+
+        calculateSalary();
+
+      }
+    );
+
     salaryInput.addEventListener(
       "change",
       calculateSalary
@@ -1731,6 +1958,8 @@
 
           }
         );
+
+        fitpassMembers = 0;
 
         calculateSalary();
 
@@ -1764,6 +1993,7 @@
       );
 
     }
+
   </script>
 
 </body>
