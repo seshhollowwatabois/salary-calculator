@@ -404,6 +404,7 @@
   <main class="app">
 
     <div class="header">
+
       <h1
         id="title"
         class="title"
@@ -418,6 +419,7 @@
       >
         🇬🇪
       </button>
+
     </div>
 
     <section class="card">
@@ -488,10 +490,9 @@
           <input
             id="overtime"
             class="hour-input"
-            type="number"
+            type="text"
             inputmode="decimal"
-            min="0"
-            step="1"
+            autocomplete="off"
             value="0"
           >
 
@@ -510,10 +511,9 @@
           <input
             id="night"
             class="hour-input"
-            type="number"
+            type="text"
             inputmode="decimal"
-            min="0"
-            step="1"
+            autocomplete="off"
             value="0"
           >
 
@@ -532,10 +532,9 @@
           <input
             id="holiday"
             class="hour-input"
-            type="number"
+            type="text"
             inputmode="decimal"
-            min="0"
-            step="1"
+            autocomplete="off"
             value="0"
           >
 
@@ -554,10 +553,9 @@
           <input
             id="holidayNight"
             class="hour-input"
-            type="number"
+            type="text"
             inputmode="decimal"
-            min="0"
-            step="1"
+            autocomplete="off"
             value="0"
           >
 
@@ -579,10 +577,9 @@
           <input
             id="unpaidLeave"
             class="hour-input"
-            type="number"
+            type="text"
             inputmode="decimal"
-            min="0"
-            step="1"
+            autocomplete="off"
             value="0"
           >
 
@@ -1092,10 +1089,31 @@
       selectedMonth = 0;
     }
 
+    function getNumber(input) {
+
+      const value =
+        String(input.value)
+          .trim()
+          .replace(",", ".");
+
+      if (value === "") {
+        return 0;
+      }
+
+      const number =
+        Number(value);
+
+      return Number.isFinite(number)
+        ? number
+        : 0;
+    }
+
     function money(value) {
+
       return (
         Number(value) || 0
       ).toFixed(2) + " GEL";
+
     }
 
     function renderMonths() {
@@ -1241,29 +1259,29 @@
         ) || 0;
 
       const overtime =
-        Number(
-          overtimeInput.value
-        ) || 0;
+        getNumber(
+          overtimeInput
+        );
 
       const night =
-        Number(
-          nightInput.value
-        ) || 0;
+        getNumber(
+          nightInput
+        );
 
       const holiday =
-        Number(
-          holidayInput.value
-        ) || 0;
+        getNumber(
+          holidayInput
+        );
 
       const holidayNight =
-        Number(
-          holidayNightInput.value
-        ) || 0;
+        getNumber(
+          holidayNightInput
+        );
 
       const unpaidLeaveDays =
-        Number(
-          unpaidLeaveInput.value
-        ) || 0;
+        getNumber(
+          unpaidLeaveInput
+        );
 
       const scheduledHours =
         monthHours[selectedMonth];
@@ -1554,13 +1572,24 @@
 
           if (
             input.value === "" ||
-            Number(input.value) < 0
+            input.value === "," ||
+            input.value === "."
+          ) {
+            input.value = "0";
+          }
+
+          const number =
+            getNumber(input);
+
+          if (
+            !Number.isFinite(number) ||
+            number < 0
           ) {
             input.value = "0";
           }
 
           if (
-            input.value === "0"
+            getNumber(input) === 0
           ) {
             input.classList.add(
               "placeholder-zero"
@@ -1576,11 +1605,94 @@
         "input",
         () => {
 
+          let value =
+            input.value;
+
+          value =
+            value.replace(
+              /[^0-9,.]/g,
+              ""
+            );
+
+          const firstComma =
+            value.indexOf(",");
+
+          const firstDot =
+            value.indexOf(".");
+
           if (
-            Number(input.value) < 0
+            firstComma !== -1 &&
+            firstDot !== -1
           ) {
-            input.value = "0";
+
+            const decimalPosition =
+              Math.min(
+                firstComma,
+                firstDot
+              );
+
+            value =
+              value.slice(
+                0,
+                decimalPosition + 1
+              ) +
+              value
+                .slice(
+                  decimalPosition + 1
+                )
+                .replace(
+                  /[,.]/g,
+                  ""
+                );
+
+          } else {
+
+            const separator =
+              firstComma !== -1
+                ? ","
+                : ".";
+
+            if (
+              separator !== ""
+            ) {
+
+              const position =
+                value.indexOf(
+                  separator
+                );
+
+              if (
+                position !== -1
+              ) {
+
+                value =
+                  value.slice(
+                    0,
+                    position + 1
+                  ) +
+                  value
+                    .slice(
+                      position + 1
+                    )
+                    .replace(
+                      /[,.]/g,
+                      ""
+                    );
+
+              }
+
+            }
+
           }
+
+          input.value =
+            value;
+
+          input.classList.toggle(
+            "placeholder-zero",
+            value === "0" ||
+            value === ""
+          );
 
           calculateSalary();
 
@@ -1590,9 +1702,11 @@
       if (
         input.value === "0"
       ) {
+
         input.classList.add(
           "placeholder-zero"
         );
+
       }
 
     });
@@ -1608,11 +1722,13 @@
 
         hourInputs.forEach(
           input => {
+
             input.value = "0";
 
             input.classList.add(
               "placeholder-zero"
             );
+
           }
         );
 
@@ -1632,7 +1748,9 @@
 
     calculateSalary();
 
-    if ("serviceWorker" in navigator) {
+    if (
+      "serviceWorker" in navigator
+    ) {
 
       window.addEventListener(
         "load",
